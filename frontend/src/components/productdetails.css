@@ -1,0 +1,144 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color:rgb(204, 204, 211);
+}
+
+.main_container{
+    margin-top: 100px;
+    background-color:#ECECEC;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    min-height: 100vh;
+    min-width:100%;
+   
+}
+   
+
+/* Product Image */
+.d-flex.gap-2 img {
+    max-width: 100%;
+    height: auto;
+    
+    border-radius: 5px;
+}
+
+/* Product Details */
+.fw-bold {
+    font-size: 22px;
+}
+
+.text-muted {
+    font-size: 14px;
+}
+
+/* Size Options */
+.d-flex.gap-2 button {
+    border: 1px solid #000;
+    padding: 8px 15px;
+    background: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.d-flex.gap-2 button:hover {
+    background-color: #000;
+    color: white;
+}
+
+/* Price Info */
+.text-danger {
+    font-size: 22px;
+}
+
+.text-danger span {
+    font-size: 14px;
+}
+
+/* Add to Cart Button */
+.w-100.mt-3 {
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+.w-100.mt-3:hover {
+    background-color: #218838;
+}
+
+/* Size Chart Table */
+.table-light th {
+    text-align: center;
+    font-weight: bold;
+}
+
+td {
+    text-align: center;
+}
+
+/* Tabs (Similar, Colour, Brand) */
+.d-flex.border-bottom div {
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.d-flex.border-bottom div:first-child {
+    border-bottom: 2px solid green;
+    color: green;
+}
+
+.d-flex.border-bottom div:not(:first-child) {
+    color: gray;
+}
+
+/* Similar Products */
+.mt-3 .img-fluid {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.mt-3 .img-fluid:hover {
+    transform: scale(1.05);
+}  
+.size-button {
+    border: 1px solid black;
+    color: white; /* Ensures text is visible */
+    background-color: black !important; /* Ensures it doesn't get overridden */
+}
+  
+.size-button:hover{
+   color: black;
+    background-color: rgb(146, 211, 231);
+}
+  
+.size-button.selected {
+    background-color: rgb(177, 225, 135) !important;
+    color: white !important;
+}
+
+  .product-details-container {
+     background-color:white;
+    padding:30px;
+    border-radius: 10px; /* Optional: To make the design smoother */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Adds slight shadow for better visibility */
+    margin: 30px 0;
+  }
+  
+  
+
+/* Responsive */
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+    }
+}
