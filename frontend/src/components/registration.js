@@ -1,24 +1,37 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./registration.css"; 
+import axios from "axios";
+import "./registration.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    phone_number: "",
     password: "",
-    role: "vendor", 
+    usertype: "vendor",
   });
+
+  const sendregisterData = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/register", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log("Registration successful:", response.message);
+      alert("Registration successful!");
+    } catch (error) {
+      console.error("Error while sending data:", error.response ? error.response.data : error.message);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("User Registered:", formData);
-    
+    await sendregisterData();
   };
 
   return (
@@ -52,8 +65,8 @@ const Register = () => {
           <label className="register-label">Phone Number</label>
           <input
             type="text"
-            name="phone"
-            value={formData.phone}
+            name="phone_number"
+            value={formData.phone_number} 
             onChange={handleChange}
             className="register-input"
             required
@@ -73,14 +86,14 @@ const Register = () => {
           {/* Role Selection */}
           <label className="register-label">Register as</label>
           <select
-            name="role"
-            value={formData.role}
+            name="usertype"
+            value={formData.usertype} 
             onChange={handleChange}
             className="register-input"
             required
           >
+            <option value="customer">Customer</option>
             <option value="vendor">Vendor</option>
-            <option value="seller">Seller</option>
             <option value="admin">Admin</option>
           </select>
 
@@ -90,7 +103,6 @@ const Register = () => {
           </button>
         </form>
 
-        
         <p className="register-login-link">
           Already have an account? <Link to="/login">Sign In</Link>
         </p>

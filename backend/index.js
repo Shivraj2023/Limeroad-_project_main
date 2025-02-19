@@ -1,61 +1,51 @@
-const express= require("express");
-const cors=require("cors");
-const mysql=require("mysql2")
-const app=express();
+const express = require("express");
+const cors = require("cors");
+const mysql = require("mysql2");
 
-app.use(cors())
+const app = express();
 
-const db=mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"Shiv_gsb@20",
-    database:"limeroad"
+app.use(cors());
+app.use(express.json()); 
+
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "Shiv_gsb@20",
+    database: "limeroad"
 });
-db.connect((err)=>{
-if(err){
-    console.log("mysql connection failed",err)
-} else {
-    console.log("the connection to mysql is succesfull !")
-}
-})
 
-app.get('/',(req,res)=>{
-    res.send("initaial page request you have amde")
-})
+db.connect((err) => {
+    if (err) {
+        console.log("MySQL connection failed:", err);
+    } else {
+        console.log("The connection to MySQL is successful!");
+    }
+});
 
-app.get('/message',(req,res)=>{
-    res.send("hello pls welcome")
-})
+app.post('/register', (req, res) => {
+    const { name, email, phone_number, password, usertype } = req.body;
+    console.log(req.body);
 
- app.get('/customers',(req,res)=>{
-    db.query(" select * from customer",(err,result)=>{
-        if(err){
-            res.status(500).send("database error"+err)
-        } else{
-            res.status(200).send(result);
-        }
-    })
- })
- app.get('/admins',(req,res)=>{
-    db.query(" select * from admin",(err,result)=>{
-        if(err){
-            res.status(500).send("database error"+err)
-        } else{
-            res.status(200).send(result);
-            
-        }
-    })
- })
- app.get('/vendors',(req,res)=>{
-    db.query(" select * from vendor",(err,result)=>{
-        if(err){
-            res.status(500).send("database error"+err)
-        } else{
-            res.status(200).send(result);
-        }
-    })
- })
+    let tablename;
+    if (usertype === 'customer') {
+        tablename = "customer";
+    } else if (usertype === 'vendor') {
+        tablename = "vendor";
+    } else if (usertype === 'admin') {
+        tablename = "admin";
+    } else {
+        return res.status(400).json({ error: "Invalid user type" });
+    }
 
-app.listen(5000, ()=>{
-    console.log("the server set up is succesful and serving on port 5000")
-})
+    const query = `INSERT INTO ${tablename} (name, email, phone_number, password) VALUES (?, ?, ?, ?)`;
+    
+    db.query(query, [name, email, phone_number, password], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json({ message: `${usertype} registered successfully` });
+    });
+});
+
+app.listen(5000, () => {
+    console.log("The server is running on port 5000");
+});
+
