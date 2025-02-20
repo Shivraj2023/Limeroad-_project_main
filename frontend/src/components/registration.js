@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./registration.css";
 
 const Register = () => {
+  const navigateto=useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,10 +20,12 @@ const Register = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log("Registration successful:", response.message);
+      console.log("Registration successful:", response.data.message);
       alert("Registration successful!");
+      navigateto("/login")
     } catch (error) {
-      console.error("Error while sending data:", error.response ? error.response.data : error.message);
+      console.error("Error while sending data:", error.response ? error.response.data: error.message);
+      alert(`Error while sending data:${ error.response ? error.response.data.error : error.message}`);
     }
   };
 

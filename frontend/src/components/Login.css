@@ -122,6 +122,17 @@
   .login-link:hover {
     text-decoration: underline;
   }
+  .register-label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .register-input {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
   
   
   

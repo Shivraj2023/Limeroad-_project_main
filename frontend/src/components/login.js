@@ -1,9 +1,42 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./Login.css"; // Import your CSS file
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Login.css"; 
 
 const Login = () => {
-  const [mobile, setMobile] = useState("");
+  const [logindata, setLogindata] = useState({
+    phone_number: '',
+    email: '',
+    usertype: '',
+  });
+
+  const navigate = useNavigate();
+
+  const logincheck = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/login", logindata, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.status === 200) {
+        alert("You logged in successfully");
+        navigate("/");
+      }
+    } catch (error) {
+      alert("There is an error: Please enter valid credentials");
+    }
+  };
+
+  const handleChange = (e) => {
+    setLogindata({ ...logindata, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+    await logincheck();
+  };
 
   return (
     <div className="login-container">
@@ -19,30 +52,59 @@ const Login = () => {
         <p className="login-subtext">Sign in to proceed further</p>
       </div>
 
-      <div className="login-form">
+      {/* Use form and onSubmit */}
+      <form className="login-form" onSubmit={handleSubmit}>
         <label className="login-label">Mobile Number</label>
         <input
           type="text"
-          value={mobile}
-          onChange={(e) => setMobile(e.target.value)}
+          name="phone_number"
+          value={logindata.phone_number}
+          onChange={handleChange}
           className="login-input"
+          required
         />
 
-        <button className="login-button" disabled={!mobile}>
+        <label className="login-label">Email</label>
+        <input
+          type="email"
+          name="email"
+          value={logindata.email}
+          onChange={handleChange}
+          className="login-input"
+          required
+        />
+
+        <label className="register-label">login as</label>
+        <select
+          name="usertype"
+          value={logindata.usertype}
+          onChange={handleChange}
+          className="register-input"
+          required
+        >
+          <option value="">Select User Type</option>
+          <option value="customer">Customer</option>
+          <option value="vendor">Vendor</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <button
+          className="login-button"
+          type="submit"
+          disabled={!logindata.phone_number || !logindata.email || !logindata.usertype}
+        >
           NEXT
         </button>
 
-        {/* Forgot Password & Register Links */}
         <div className="login-options">
           <Link to="/forgot-password" className="login-link">
             Forgot Password?
           </Link>
-         
           <Link to="/register" className="login-link">
             New User? Register Here
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
