@@ -1,14 +1,38 @@
 const express=require("express");
 const router=  express.Router();
-const Customer=require("./models/customer")
+const Customer=require("./models/customer");
+const Vendor=require("./models/vendor");
+const Admin=require("./models/admin");
+const jwt=require("jsonwebtoken");
+
+const env=require("dotenv");
+  env.config();
+
+
+
+
+
 
 
 router.post('/register', async(req,res)=>{
-    const {name,email,phone_number,password}=req.body;
+    const {name,email,phone_number,password,usertype}=req.body;
    try{
-    const customer=new Customer({name,email,phone_number,password});
-    await customer.save();
-    res.status(200).json({message:"registred succesful"})
+      if(usertype==="customer"){
+        const customer=new Customer({name,email,phone_number,password,usertype});
+        await customer.save();
+        res.status(200).json({message:"registred succesful"})
+      } else if (usertype==="vendor"){
+        const vendor=new Vendor({name,email,phone_number,password,usertype});
+        await vendor.save();
+        res.status(200).json({message:"registred succesful"})
+      }    else if (usertype==="admin"){
+        const admin=new Admin({name,email,phone_number,password,usertype});
+        await admin.save();
+        res.status(200).json({message:"registred succesful"})
+      } else{
+        res.status(400).json({error:"invalid usertype"})
+      }  
+    
    }  
    catch (error){
     res.status(400).json({message:"error while registering"})
@@ -20,17 +44,35 @@ router.post('/login',async(req,res)=>{
 
     const {phone_number,email}=req.body;
     console.log(req.body);
-   
+       
     try{
-     const customer=  await Customer.findOne({phone_number:phone_number,email:email});
+      let user;
 
-     if(!customer){
+      user=  await Customer.findOne({phone_number:phone_number,email:email});
+      if(!user) {
+      user=  await Vendor.findOne({phone_number:phone_number,email:email});
+      }
+      if(!user) {
+      user=  await Admin.findOne({phone_number:phone_number,email:email});
+      }
+      
+     if(!user){
         return res.status(401).json({message:"you are not registerd"})
      }
-     res.status(200).json({message:"login succesfull"})
-
-    } catch(error){
-     res.status(500).json({message:"server error"})
+  const payload={
+    id:user._id,
+    usertype:user.usertype
+  }
+   
+     const token=jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'24h'});
+    
+     res.cookie('authToken',token,{
+        httpOnly:true,
+     });
+     res.status(200).json({message:"login succesfull",usertype:user.usertype});
+    }
+     catch(error){
+     res.status(500).json({message:"server error",error:error.message})
     }
 
 })

@@ -1,4 +1,4 @@
-const express=require("express");
+
 const mongoose=require("mongoose");
 
 const customerSchema=new mongoose.Schema ({
@@ -22,6 +22,8 @@ const customerSchema=new mongoose.Schema ({
   }
 })
 
-const Customer=mongoose.model("customer",customerSchema)
+const Customer=mongoose.model("customer",customerSchema);
+
+
 
 module.exports= Customer;

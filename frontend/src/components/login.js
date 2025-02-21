@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import axios from "axios";
 import "./Login.css"; 
 
@@ -7,7 +8,6 @@ const Login = () => {
   const [logindata, setLogindata] = useState({
     phone_number: '',
     email: '',
-    usertype: '',
   });
 
   const navigate = useNavigate();
@@ -21,11 +21,25 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        alert("You logged in successfully");
-        navigate("/");
+        Swal.fire({
+                 title: 'Success!',
+                text: 'You logged in successfully.',
+                imageUrl:"https://www.shutterstock.com/shutterstock/photos/2099041108/display_1500/stock-vector-login-success-concept-illustration-flat-design-vector-eps-modern-graphic-element-for-landing-2099041108.jpg",
+                imageWidth:400,
+                imageHeight:300,
+                imageAlt:"image"
+              });
+           setTimeout(()=>{
+            navigate("/")
+           },1500) ;
       }
     } catch (error) {
+
+      if(error.response){
+        alert(`There is an error: ${error.response.data.error || "Please enter valid credentials"}`);
+      } else {
       alert("There is an error: Please enter valid credentials");
+      }
     }
   };
 
@@ -54,7 +68,7 @@ const Login = () => {
 
       {/* Use form and onSubmit */}
       <form className="login-form" onSubmit={handleSubmit}>
-        <label className="login-label">Mobile Number</label>
+        <label className="login-label">Mobile Number:</label>
         <input
           type="text"
           name="phone_number"
@@ -64,7 +78,7 @@ const Login = () => {
           required
         />
 
-        <label className="login-label">Email</label>
+        <label className="login-label">Email:</label>
         <input
           type="email"
           name="email"
@@ -73,25 +87,12 @@ const Login = () => {
           className="login-input"
           required
         />
-
-        <label className="register-label">login as</label>
-        <select
-          name="usertype"
-          value={logindata.usertype}
-          onChange={handleChange}
-          className="register-input"
-          required
-        >
-          <option value="">Select User Type</option>
-          <option value="customer">Customer</option>
-          <option value="vendor">Vendor</option>
-          <option value="admin">Admin</option>
-        </select>
+        
 
         <button
           className="login-button"
           type="submit"
-          disabled={!logindata.phone_number || !logindata.email || !logindata.usertype}
+          disabled={!logindata.phone_number || !logindata.email }
         >
           NEXT
         </button>

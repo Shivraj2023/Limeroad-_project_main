@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+
 import axios from "axios";
 import "./registration.css";
 
@@ -21,7 +23,14 @@ const Register = () => {
       });
 
       console.log("Registration successful:", response.data.message);
-      alert("Registration successful!");
+      Swal.fire({
+         title: 'Success!',
+        text: `you succesfully registerd as ${formData.usertype}`,
+        imageUrl:"https://www.shutterstock.com/shutterstock/photos/2423097831/display_1500/stock-vector-approved-checklist-icon-checklist-on-d-paper-document-in-test-form-with-check-marks-and-stripes-2423097831.jpg",
+        imageWidth:400,
+        imageHeight:300,
+        imageAlt:"image"
+      });
       navigateto("/login")
     } catch (error) {
       console.error("Error while sending data:", error.response ? error.response.data: error.message);

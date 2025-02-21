@@ -75,8 +75,7 @@
 }
 
 
-.login-input,
-.register-input {
+.login-input {
   width: 100%;
   padding: 10px 12px;
   font-size: 16px;
@@ -85,8 +84,7 @@
   transition: border 0.3s ease;
 }
 
-.login-input:focus,
-.register-input:focus {
+.login-input:focus:focus {
   border-color: #6fc47a;
   outline: none;
 }
