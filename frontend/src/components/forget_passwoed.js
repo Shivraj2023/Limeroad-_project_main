@@ -2,13 +2,38 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./forgotpassword.css"; 
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const ForgotPassword = () => {
-  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [email, setEmail] = useState("");
+
+   const passwordReset=async()=>{
+      try{
+        const response=await axios.post("http://localhost:5000/forgot-password",{email:email},{
+          headers:{
+            "Content-Type":"application/json",
+          }
+        })
+        if(response.status===200){
+     Swal.fire({
+        icon:"success",
+        title: 'Success!',
+         text: `You password reset link sent successfully to ${email}`,
+     });
+        }
+      }  catch(error){
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "There was some error while sending the reset link. Please try again.",
+        });
+      }
+   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Password reset request for:", emailOrPhone);
+    passwordReset();
     
   };
 
@@ -21,12 +46,12 @@ const ForgotPassword = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="forgot-password-form">
-          <label className="forgot-password-label">Email or Phone</label>
+          <label className="forgot-password-label">Email</label>
           <input
             type="text"
-            name="emailOrPhone"
-            value={emailOrPhone}
-            onChange={(e) => setEmailOrPhone(e.target.value)}
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="forgot-password-input"
             required
           />

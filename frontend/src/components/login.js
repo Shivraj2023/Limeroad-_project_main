@@ -24,14 +24,14 @@ const Login = () => {
         Swal.fire({
                  title: 'Success!',
                 text: 'You logged in successfully.',
-                imageUrl:"https://www.shutterstock.com/shutterstock/photos/2099041108/display_1500/stock-vector-login-success-concept-illustration-flat-design-vector-eps-modern-graphic-element-for-landing-2099041108.jpg",
+                 imageUrl:"https://www.shutterstock.com/shutterstock/photos/2099041108/display_1500/stock-vector-login-success-concept-illustration-flat-design-vector-eps-modern-graphic-element-for-landing-2099041108.jpg",
                 imageWidth:400,
                 imageHeight:300,
                 imageAlt:"image"
               });
-           setTimeout(()=>{
+            setTimeout(()=>{
             navigate("/")
-           },1500) ;
+           },1500) ; 
       }
     } catch (error) {
 

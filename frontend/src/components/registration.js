@@ -7,6 +7,7 @@ import axios from "axios";
 import "./registration.css";
 
 const Register = () => {
+
   const navigateto=useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -15,13 +16,18 @@ const Register = () => {
     password: "",
     usertype: "vendor",
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const sendregisterData = async () => {
+  const sendregisterData = async (e) => {
+    e.preventDefault();
+     if(!validatePasswords()) return;
     try {
+     
       const response = await axios.post("http://localhost:5000/register", formData, {
         headers: { "Content-Type": "application/json" },
       });
-
+       
       console.log("Registration successful:", response.data.message);
       Swal.fire({
          title: 'Success!',
@@ -32,26 +38,38 @@ const Register = () => {
         imageAlt:"image"
       });
       navigateto("/login")
-    } catch (error) {
+
+    }
+     catch (error) {
       console.error("Error while sending data:", error.response ? error.response.data: error.message);
       alert(`Error while sending data:${ error.response ? error.response.data.error : error.message}`);
     }
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'confirmPassword') {
+      setConfirmPassword(value);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+  const validatePasswords = () => {
+    if (formData.password !== confirmPassword) {
+      setError("Passwords do not match!");
+      return false;
+    }
+    setError('');
+    return true;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await sendregisterData();
-  };
+ 
 
   return (
     <div className="register-container">
       <div className="register-box">
         <h2 className="register-title">Create an Account</h2>
-        <form onSubmit={handleSubmit} className="register-form">
+        <form onSubmit={sendregisterData} className="register-form">
           {/* Name */}
           <label className="register-label">Full Name</label>
           <input
@@ -94,6 +112,15 @@ const Register = () => {
             onChange={handleChange}
             className="register-input"
             required
+          /> 
+          <label className="register-label">Re-confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={handleChange}
+            className="register-input"
+            required
           />
 
           {/* Role Selection */}
@@ -111,6 +138,7 @@ const Register = () => {
           </select>
 
           {/* Submit Button */}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
           <button type="submit" className="register-button">
             REGISTER
           </button>

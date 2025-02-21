@@ -12,6 +12,8 @@ import Payment from './payment'
 import Register from './registration';
 import ForgotPassword from './forget_passwoed';
 import { Outlet,useLocation } from 'react-router-dom';
+import Resetpassword from './resetpassword';
+
 
 
 
@@ -21,7 +23,7 @@ const Layout = () => {
   <>
     <Navbar />
     <Outlet />
-    {location.pathname !== '/cartpage' && location.pathname !== '/login' && <Footer />}
+    {location.pathname !== '/cartpage' && location.pathname !== '/login' && location.pathname !=='/reset-password' && location.pathname !== '/register' &&<Footer />}
 
   </>
   );
@@ -32,7 +34,7 @@ function Router() {
   return (
     
     <BrowserRouter>
-       
+        
       
         <Routes>
         <Route path="/" element={<Layout />}>
@@ -44,10 +46,11 @@ function Router() {
           <Route path='/login' element={<Login/>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/forgot-password' element={<ForgotPassword/>}/>
+          <Route path='/reset-password' element={<Resetpassword/>}/>
           </Route>
           <Route path='/cartpage' element={<Cartproducts/>}/>
           <Route path='/payment' element={<Payment/>}/>
-         
+          
         </Routes>
       
     </BrowserRouter>
