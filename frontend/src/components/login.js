@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { authContext } from "./contextlogin";
 import "./Login.css"; 
 
 const Login = () => {
+    const useauthContext=useContext(authContext);
+    const {login,setUsername}=useauthContext;
+
   const [logindata, setLogindata] = useState({
     phone_number: '',
     email: '',
@@ -21,6 +25,9 @@ const Login = () => {
       });
 
       if (response.status === 200) {
+        login();
+        setUsername(response.data.name)
+        console.log("response===========",response.data.name);
         Swal.fire({
                  title: 'Success!',
                 text: 'You logged in successfully.',

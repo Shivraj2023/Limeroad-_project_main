@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { authContext } from "./contextlogin";
+import Logout from "./logout";
 
 import "./navbar.css";
 
 function Navbar() {
+  const useauthContext=useContext(authContext);
+  const {isloggedin}=useauthContext;
+  
+
   const cartItems = useSelector((state) => state.cart.items);
   const totalItems = Array.isArray(cartItems)
     ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
@@ -179,9 +185,12 @@ function Navbar() {
                 <div className="profile-dropdown">
                   <h6 className="profile-welcome">Welcome</h6>
                   <p className="profile-text">To view your account details</p>
+                  {isloggedin ?( <div>  
+                    <Logout></Logout>
+                   </div>):(
                   <Link to="/login">
                     <button className="profile-login-btn">Login</button>
-                  </Link>
+                  </Link>)}
                   <hr className="profile-divider" />
 
                   <div className="profile-links">

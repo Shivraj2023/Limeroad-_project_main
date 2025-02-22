@@ -46,7 +46,7 @@ function Resetpassword() {
         navagate("/login")
       }
     } catch (error) {
-      alert("There is some error");
+      alert(error.response.data.message);
     }
   };
 

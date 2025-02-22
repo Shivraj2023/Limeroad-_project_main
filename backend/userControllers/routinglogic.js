@@ -1,4 +1,4 @@
-// userController.js
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const env = require("dotenv");
@@ -54,10 +54,15 @@ const login = async (req, res) => {
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
     res.cookie("authToken", token, { httpOnly: true });
-    res.status(200).json({ message: "Login successful", usertype: user.usertype });
+    res.status(200).json({ message: "Login successful", usertype: user.usertype,name:user.name });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
+};
+
+const logout=async(req,res)=>{
+   res.cookie("authToken",'',{expires:new Date(0),httpOnly:true})
+   res.status(200).json({ message: 'Logged out successfully' });
 };
 
 const forgotPassword = async (req, res) => {
@@ -98,8 +103,16 @@ const forgotPassword = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password,resetpassToken } = req.body;
+  console.log("enetred email=====",email);
+  console.log("resetpasstoken======",resetpassToken);
   try {
+    const payloademail=jwt.verify(resetpassToken,process.env.JWT_SECRET);
+    console.log("payload email=======",payloademail.email);
+
+    if(payloademail.email!==email) {
+      return res.status(401).json({ message: "Invalid token for the provided email" });
+    }
     let user = await Customer.findOne({ email });
     if (!user) {
       user = await Vendor.findOne({ email });
@@ -114,10 +127,11 @@ const resetPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltrounds);
     user.password = hashedPassword;
     await user.save();
+
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword };
+module.exports = { register, login,logout, forgotPassword, resetPassword };
