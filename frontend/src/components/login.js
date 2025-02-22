@@ -7,7 +7,7 @@ import "./Login.css";
 
 const Login = () => {
     const useauthContext=useContext(authContext);
-    const {login,setUsername}=useauthContext;
+    const {login}=useauthContext;
 
   const [logindata, setLogindata] = useState({
     phone_number: '',
@@ -25,9 +25,11 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        login();
-        setUsername(response.data.name)
-        console.log("response===========",response.data.name);
+        
+        console.log(response.data.name);
+        login(response.data.name);
+        
+       
         Swal.fire({
                  title: 'Success!',
                 text: 'You logged in successfully.',
