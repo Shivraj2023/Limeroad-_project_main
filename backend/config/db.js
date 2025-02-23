@@ -10,7 +10,7 @@ env.config()
 let connect_mongo_db =  async ()=>{
         try{
             await mongoose.connect(process.env.MONGO_DB_URL);
-            console.log("mongo db database")
+            console.log(" conneted mongo db database")
         }
         catch(error){
             console.log("error while connectting to mongo db databses:",error)

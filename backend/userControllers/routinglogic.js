@@ -11,7 +11,7 @@ const transporter = require("./transporter");
 
 const register = async (req, res) => {
   const { name, email, phone_number, password, usertype } = req.body;
-  console.log("---------",req.body);
+  
   try {
     const saltrounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltrounds);

@@ -26,7 +26,7 @@ const Login = () => {
 
       if (response.status === 200) {
         localStorage.setItem("usertype",response.data.usertype);
-        console.log(response.data.usertype);
+        
         setUsertype(response.data.usertype);
         login(response.data.name);
            
