@@ -14,7 +14,7 @@ const Register = () => {
     email: "",
     phone_number: "",
     password: "",
-    usertype: "vendor",
+    usertype: "customer",
   });
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -126,6 +126,7 @@ const Register = () => {
           {/* Role Selection */}
           <label className="register-label">Register as</label>
           <select
+          
             name="usertype"
             value={formData.usertype} 
             onChange={handleChange}

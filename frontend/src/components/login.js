@@ -7,11 +7,11 @@ import "./Login.css";
 
 const Login = () => {
     const useauthContext=useContext(authContext);
-    const {login}=useauthContext;
+    const {login,setUsertype}=useauthContext;
 
   const [logindata, setLogindata] = useState({
-    phone_number: '',
-    email: '',
+       email: '',
+       password: '',
   });
 
   const navigate = useNavigate();
@@ -25,12 +25,12 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        
-        console.log(response.data.name);
+        localStorage.setItem("usertype",response.data.usertype);
+        console.log(response.data.usertype);
+        setUsertype(response.data.usertype);
         login(response.data.name);
-        
-       
-        Swal.fire({
+           
+         Swal.fire({
                  title: 'Success!',
                 text: 'You logged in successfully.',
                  imageUrl:"https://www.shutterstock.com/shutterstock/photos/2099041108/display_1500/stock-vector-login-success-concept-illustration-flat-design-vector-eps-modern-graphic-element-for-landing-2099041108.jpg",
@@ -77,7 +77,7 @@ const Login = () => {
 
       {/* Use form and onSubmit */}
       <form className="login-form" onSubmit={handleSubmit}>
-        <label className="login-label">Mobile Number:</label>
+        {/* <label className="login-label">Mobile Number:</label>
         <input
           type="text"
           name="phone_number"
@@ -85,7 +85,7 @@ const Login = () => {
           onChange={handleChange}
           className="login-input"
           required
-        />
+        /> */}
 
         <label className="login-label">Email:</label>
         <input
@@ -96,12 +96,22 @@ const Login = () => {
           className="login-input"
           required
         />
+
+        <label className="login-label">Password:</label>
+          <input
+            type="password"
+            name="password"
+            value={logindata.password}
+            onChange={handleChange}
+            className="login-input"
+            required
+          />
         
 
         <button
           className="login-button"
           type="submit"
-          disabled={!logindata.phone_number || !logindata.email }
+          disabled={!logindata.password || !logindata.email }
         >
           NEXT
         </button>

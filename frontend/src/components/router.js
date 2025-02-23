@@ -13,6 +13,7 @@ import Register from './registration';
 import ForgotPassword from './forget_passwoed';
 import { Outlet,useLocation } from 'react-router-dom';
 import Resetpassword from './resetpassword';
+import AddProducts from './addProducts';
 
 
 
@@ -23,7 +24,7 @@ const Layout = () => {
   <>
     <Navbar />
     <Outlet />
-    {location.pathname !== '/cartpage' && location.pathname !== '/login' && location.pathname !=='/reset-password' && location.pathname !== '/register' &&<Footer />}
+    {location.pathname !== '/cartpage' && location.pathname !== '/login' && location.pathname !=='/reset-password' && location.pathname !== '/register' && location.pathname !== '/forgot-password' &&<Footer />}
 
   </>
   );
@@ -50,7 +51,7 @@ function Router() {
           </Route>
           <Route path='/cartpage' element={<Cartproducts/>}/>
           <Route path='/payment' element={<Payment/>}/>
-          
+          <Route path='/addProducts' element={<AddProducts/>}></Route>
         </Routes>
       
     </BrowserRouter>

@@ -11,6 +11,7 @@ const transporter = require("./transporter");
 
 const register = async (req, res) => {
   const { name, email, phone_number, password, usertype } = req.body;
+  console.log("---------",req.body);
   try {
     const saltrounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltrounds);
@@ -36,22 +37,30 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { phone_number, email } = req.body;
+  const {email,password} = req.body;
   try {
-    let user = await Customer.findOne({ phone_number, email });
+    let user = await Customer.findOne({email });
     if (!user) {
-      user = await Vendor.findOne({ phone_number, email });
+      user = await Vendor.findOne({email});
     }
     if (!user) {
-      user = await Admin.findOne({ phone_number, email });
+      user = await Admin.findOne({email});
     }
     if (!user) {
       return res.status(401).json({ message: "You are not registered" });
     }
+
+      const isMatch = await bcrypt.compare(password,user.password);
+     
+    if(!isMatch){
+       return res.status(400).json({message:"invalid crenditials"});
+    }
+
     const payload = {
       id: user._id,
       usertype: user.usertype,
     };
+    
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
     res.cookie("authToken", token, { httpOnly: true });
     res.status(200).json({ message: "Login successful", usertype: user.usertype,name:user.name });
