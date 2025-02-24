@@ -51,7 +51,7 @@ function Router() {
           </Route>
           <Route path='/cartpage' element={<Cartproducts/>}/>
           <Route path='/payment' element={<Payment/>}/>
-          <Route path='/addProducts' element={<AddProducts/>}></Route>
+          <Route path='/addproducts' element={<AddProducts/>}/>
         </Routes>
       
     </BrowserRouter>

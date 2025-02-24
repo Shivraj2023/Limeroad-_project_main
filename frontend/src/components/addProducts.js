@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
+import axios from 'axios';
 import './addproducts.css';
-/* 
+ 
 const categories = [
-  { value: "tshirt", label: "T-Shirt" },
-  { value: "saree", label: "Saree" },
-  { value: "pants", label: "Pants" },
-  { value: "shoes", label: "Shoes" },
-  { value: "jackets", label: "Jackets" },
-  { value: "skirts", label: "Skirts" },
-  { value: "jeans", label: "Jeans" },
-  { value: "shorts", label: "Shorts" },
-  { value: "dresses", label: "Dresses" },
-  { value: "tops", label: "Tops" },
-  { value: "sweaters", label: "Sweaters" },
-  { value: "accessories", label: "Accessories" },
-  { value: "ethnic", label: "Ethnic Wear" },
-  { value: "formal", label: "Formal Wear" },
-  { value: "casual", label: "Casual Wear" }
-]; */
+  { value: "t-shirt", label: "t-shirt" },
+  { value: "shirts", label: "shirts" },
+  { value: "trousers", label: "trousers" },
+  { value: "footwear", label: "footwear" },
+  { value: "jackets", label: "jackets" },
+  { value: "winter-wears", label: "winter-wears" },
+  { value: "boxers", label: "boxers" },
+  { value: "mens_kurtas", label: "mens_kurtas" },
+  { value: "sarees", label: "sarees" },
+  { value: "kurtas", label: "kurtas" },
+  { value: "jewellery", label: "jewellery" },
+  { value: "tops", label: "tops" },
+  { value: "ethenic-wear", label: "ethenic-wear" },
+  { value: "kaftans", label: "kaftans" },
+  { value: "coats", label: "coats" },
+  { value: "bottom-wear", label: "bottom-wear" },
+  { value: "suit-sets", label: "suit-sets" },
+  { value: "sweatshirts", label: "sweatshirts" },
+  { value: "home-essentials", label: "home-essentials" },
+]; 
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -25,14 +31,14 @@ const AddProducts = () => {
   const [product, setProduct] = useState({
     mainCategory: "",
     title: "",
-    Price: "",
+    price: "",
     description: "",
     category: "",
     original_price: "",
     offer_percent: "",
     brand_name: "",
     brand_image: "",
-    sizes: [],
+    size: [],
     image: "",
     reviews: {
       ratings: "",
@@ -43,11 +49,19 @@ const AddProducts = () => {
   const handleSizeChange = (size) => {
     setProduct(prev => ({
       ...prev,
-      sizes: prev.sizes.includes(size)
-        ? prev.sizes.filter((s) => s !== size)
-        : [...prev.sizes, size]
+      size: prev.size.includes(size)
+        ? prev.size.filter((s) => s !== size)
+        : [...prev.size, size]
     }));
   };
+
+  const handleCategoryChange = (selectedOption) => {
+    setProduct((prev) => ({
+      ...prev,
+      category: selectedOption ? selectedOption.value : ""
+    }));
+  };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,34 +83,66 @@ const AddProducts = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  async(e) => {
     e.preventDefault();
-    // Process the form data here
-    console.log("Submitted product:", product);
+     try{
+
+      const response= await axios.post("http://localhost:5000/addproducts",product,{
+        withCredentials:true,
+        headers:{
+          "Content-Type":"application/json"
+        }
+      });
+        if (response.status===200){
+          console.log('result=======>',response.data)
+          setProduct({
+            mainCategory: "",
+            title: "",
+            price: "",
+            description: "",
+            category: "",
+            original_price: "",
+            offer_percent: "",
+            brand_name: "",
+            brand_image: "",
+            size: [],
+            image: "",
+            reviews: {
+              ratings: "",
+              count: ""
+            }
+          });
+        }
+
+     } 
+     catch(error){
+      console.log("error--------->",error.response.data.message);
+     }
+    /* console.log("Submitted product:", product); */
   };
 
   return (
-    <div className="container">
-      <h1>Add Products</h1>
+    <div className="add-products">
+      <h1 className='add-process_heading'>Add Products</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="category">Main Category:</label>
           <select 
             id="category" 
             name="category" 
             value={product.category}
             onChange={handleChange}
-            className="input"
+            className="add-products_select"
           >
             <option value="">Select</option>
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
-            <option value="Home">Home</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="kids">Kids</option>
+            <option value="home">Home</option>
           </select>
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="title">Product Title:</label>
           <input 
             type="text"
@@ -104,37 +150,50 @@ const AddProducts = () => {
             name="title"
             value={product.title}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             required
           />
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="Price">Price:</label>
           <input 
             type="number" 
             id="Price" 
             name="Price"
-            value={product.Price}
+            value={product.price}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             required
           />
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="description">Product Description:</label>
           <textarea 
             id="description"
             name="description"
             value={product.description}
             onChange={handleChange}
-            className="textarea"
+            className="add-products_textarea"
             required
           />
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
+       <label htmlFor="category">Main Category:</label>
+        <Select
+         id="category"
+          name="category"
+         options={categories}
+         onChange={handleCategoryChange}
+          placeholder="Select a category"
+    
+    // value={categories.find(option => option.value === product.category)}
+  />
+</div>
+
+        <div className="add-products_form-group">
           <label htmlFor="original_price">Original Price:</label>
           <input 
             type="number" 
@@ -142,12 +201,12 @@ const AddProducts = () => {
             name="original_price"
             value={product.original_price}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             required
           />
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="offer_percent">Offer Percent:</label>
           <input 
             type="number" 
@@ -155,12 +214,12 @@ const AddProducts = () => {
             name="offer_percent"
             value={product.offer_percent}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             required
           />
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="brand_name">Brand Name:</label>
           <input 
             type="text"
@@ -168,12 +227,12 @@ const AddProducts = () => {
             name="brand_name"
             value={product.brand_name}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             required
           />
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="brand_image">Brand Image URL:</label>
           <input 
             type="url"
@@ -181,21 +240,22 @@ const AddProducts = () => {
             name="brand_image"
             value={product.brand_image}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             placeholder="Enter the brand image URL"
           />
         </div>
 
-        <div className="form-group">
-          <h3>Select Available Sizes:</h3>
+        <div className="add-products_form-group">
+          <h5>Select Available Sizes:</h5>
           <div className="checkbox-group">
             {sizes.map((size) => (
               <label key={size} className="checkbox-label">
                 <input
                   type="checkbox"
                   value={size}
-                  checked={product.sizes.includes(size)}
+                  checked={product.size.includes(size)}
                   onChange={() => handleSizeChange(size)}
+                  className='add-products_checkbox-group'
                 />
                 {size}
               </label>
@@ -203,7 +263,7 @@ const AddProducts = () => {
           </div>
         </div>
 
-        <div className="form-group">
+        <div className="add-products_form-group">
           <label htmlFor="image">Product Image URL:</label>
           <input 
             type="url"
@@ -211,13 +271,13 @@ const AddProducts = () => {
             name="image"
             value={product.image}
             onChange={handleChange}
-            className="input"
+            className="add-products_input"
             placeholder="Enter the product image URL"
           />
         </div>
 
-        <div className="form-group">
-          <h3>Reviews</h3>
+        <div className="add-products_form-group">
+          <h5>Reviews</h5>
           <div className="review-group">
             <label htmlFor="reviews">Ratings:</label>
             <input 
@@ -226,11 +286,11 @@ const AddProducts = () => {
               name="reviews"
               value={product.reviews.ratings}
               onChange={handleChange}
-              className="input"
+              className="add-products_input"
               required
             />
           </div>
-          <div className="review-group">
+          <div className="add-products_form-group">
             <label htmlFor="rating">Review Count:</label>
             <input 
               type="number"
@@ -239,14 +299,14 @@ const AddProducts = () => {
               name="rating"
               value={product.reviews.count}
               onChange={handleChange}
-              className="input"
+              className="add-products_input"
               required
             />
           </div>
         </div>
 
-        <div className="form-group">
-          <button type="submit" className="btn">Add Product</button>
+        <div className="add-products_form-group">
+          <button type="submit" className="add-products_btn">Add Product</button>
         </div>
       </form>
     </div>

@@ -40,7 +40,7 @@ const Logout = () => {
       {usertype==="vendor"?(
         <>
         <h6 style={{paddingTop:"2px", color: "#e74c3c",fontWeight:"bold"}}>{username}</h6>
-       <Link to="/addProducts"> 
+       <Link to="/addproducts"> 
        <button style={{
       backgroundColor: "#28a745",
       color: "#fff",

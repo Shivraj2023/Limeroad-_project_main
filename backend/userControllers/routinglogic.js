@@ -7,7 +7,9 @@ env.config();
 const Customer = require("../models/customer");
 const Vendor = require("../models/vendor");
 const Admin = require("../models/admin");
+const Product =require("../models/products");
 const transporter = require("./transporter");
+const verifyToken=require("../middlewares/verifytoken");
 
 const register = async (req, res) => {
   const { name, email, phone_number, password, usertype } = req.body;
@@ -143,4 +145,27 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login,logout, forgotPassword, resetPassword };
+
+const addproducts = async (req,res) => {
+    
+  console.log("reqbody=======>",req.body);
+  try{
+
+    const vendor_id=req.user._id;
+    
+    const product=new Product({...req.body,vendorID:vendor_id});
+
+    const savedProduct= await product.save();
+
+    res.status(201).json(savedProduct);
+
+  }  catch(error){
+    res.status(500).json({message:"error while adding product"})
+  }
+}
+
+
+
+
+
+module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts };
