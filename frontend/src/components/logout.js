@@ -11,16 +11,14 @@ const Logout = () => {
     const handleLogout=async()=>{
         
         try{
-            const response= await axios.post("http://localhost:5000/logout",null,{
-                 withCredentials:true,
-            })
+            const response= await axios.post("http://localhost:5000/logout");
            
             Swal.fire({
                 icon:'info',
                  title: 'Success!',
                  text: response.data.message||'You logged in successfully.',
              });
-
+       localStorage.removeItem("authToken");
              logout();
 
         }  catch(error){

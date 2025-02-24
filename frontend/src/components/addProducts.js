@@ -86,14 +86,17 @@ const AddProducts = () => {
   const handleSubmit =  async(e) => {
     e.preventDefault();
      try{
-
+      const token = localStorage.getItem("authToken");
+      console.log("tokenn------",token);
       const response= await axios.post("http://localhost:5000/addproducts",product,{
-        withCredentials:true,
-        headers:{
-          "Content-Type":"application/json"
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         }
       });
-        if (response.status===200){
+      if (response.status === 200 || response.status === 201){
+          console.log(response.data.message);
           console.log('result=======>',response.data)
           setProduct({
             mainCategory: "",
@@ -128,17 +131,17 @@ const AddProducts = () => {
         <div className="add-products_form-group">
           <label htmlFor="category">Main Category:</label>
           <select 
-            id="category" 
-            name="category" 
-            value={product.category}
-            onChange={handleChange}
-            className="add-products_select"
-          >
-            <option value="">Select</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="kids">Kids</option>
-            <option value="home">Home</option>
+          id="mainCategory" 
+          name="mainCategory"  
+          value={product.mainCategory} 
+          onChange={handleChange} 
+          className="add-products_select"
+            >
+         <option value="">Select</option>
+        <option value="men">Men</option>
+         <option value="women">Women</option>
+           <option value="kids">Kids</option>
+           <option value="home">Home</option>
           </select>
         </div>
 
@@ -159,8 +162,8 @@ const AddProducts = () => {
           <label htmlFor="Price">Price:</label>
           <input 
             type="number" 
-            id="Price" 
-            name="Price"
+            id="price" 
+            name="price"
             value={product.price}
             onChange={handleChange}
             className="add-products_input"

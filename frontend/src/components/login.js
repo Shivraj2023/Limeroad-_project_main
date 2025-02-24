@@ -25,6 +25,11 @@ const Login = () => {
       });
 
       if (response.status === 200) {
+      
+           const token=response.data.token;
+           console.log("token-----",token);
+           localStorage.setItem("authToken",token);
+      
         localStorage.setItem("usertype",response.data.usertype);
         
         setUsertype(response.data.usertype);

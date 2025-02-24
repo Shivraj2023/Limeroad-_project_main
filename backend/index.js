@@ -2,22 +2,25 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser=require("cookie-parser");
 
+const app = express();
+app.use(cookieParser());
+
+
 const useRoutes=require("./router");
 const connect_mongo_db=require("./config/db")
 require("dotenv").config();
 
-const app = express();
-app.use(cookieParser());
 
 const port=process.env.PORT||5000;
 connect_mongo_db();
 
 
-
 app.use(cors({
-    origin:"http://localhost:3000",
-    credentials:true
-}));
+    origin: "http://localhost:3000",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
+  
 app.use(express.json()); 
 
 

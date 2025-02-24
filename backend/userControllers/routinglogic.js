@@ -37,44 +37,47 @@ const register = async (req, res) => {
     res.status(400).json({ message: "Error while registering", error: error.message });
   }
 };
-
 const login = async (req, res) => {
-  const {email,password} = req.body;
+  const { email, password } = req.body;
   try {
-    let user = await Customer.findOne({email });
+    let user = await Customer.findOne({ email });
     if (!user) {
-      user = await Vendor.findOne({email});
+      user = await Vendor.findOne({ email });
     }
     if (!user) {
-      user = await Admin.findOne({email});
+      user = await Admin.findOne({ email });
     }
     if (!user) {
       return res.status(401).json({ message: "You are not registered" });
     }
 
-      const isMatch = await bcrypt.compare(password,user.password);
-     
-    if(!isMatch){
-       return res.status(400).json({message:"invalid crenditials"});
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const payload = {
       id: user._id,
       usertype: user.usertype,
     };
-    
+
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
-    res.cookie("authToken", token, { httpOnly: true });
-    res.status(200).json({ message: "Login successful", usertype: user.usertype,name:user.name });
+    
+    res.status(200).json({ 
+      message: "Login successful", 
+      usertype: user.usertype, 
+      name: user.name,
+      token: token 
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-const logout=async(req,res)=>{
-   res.cookie("authToken",'',{expires:new Date(0),httpOnly:true})
-   res.status(200).json({ message: 'Logged out successfully' });
+const logout = async (req, res) => {
+  res.status(200).json({ message: 'Logged out successfully' });
 };
+
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -146,23 +149,47 @@ const resetPassword = async (req, res) => {
 };
 
 
-const addproducts = async (req,res) => {
-    
-  console.log("reqbody=======>",req.body);
-  try{
+const addproducts = async (req, res) => {
+  try {
+    console.log("Authenticated user:", req.user);
+    const vendor_id = req.user && req.user.id;
+    if (!vendor_id) {
+      return res.status(401).json({ message: "Unauthorized: Vendor ID missing" });
+    }
+    console.log("Vendor ID:", vendor_id);
 
-    const vendor_id=req.user._id;
-    
-    const product=new Product({...req.body,vendorID:vendor_id});
+    // Construct the product data explicitly:
+    const productData = {
+      mainCategory: req.body.mainCategory,
+      title: req.body.title,
+      price: req.body.price,
+      description: req.body.description,
+      category: req.body.category,
+      original_price: req.body.original_price,
+      offer_percent: req.body.offer_percent,
+      brand_name: req.body.brand_name,
+      brand_image: req.body.brand_image,
+      size: req.body.size, // expecting an array
+      image: req.body.image,
+      reviews: {
+        ratings: req.body.reviews?.ratings,
+        count: req.body.reviews?.count
+      },
+      vendorId: vendor_id, // Ensure the correct property name
+    };
 
-    const savedProduct= await product.save();
+    console.log("Final product data:", productData);
 
-    res.status(201).json(savedProduct);
+    const product = new Product(productData);
+    const savedProduct = await product.save();
 
-  }  catch(error){
-    res.status(500).json({message:"error while adding product"})
+    res.status(201).json({message:"product added succesfully",product:savedProduct,vendorId:vendor_id});
+  } catch (error) {
+    console.error("Error while adding product:", error);
+    res.status(500).json({ message: "Error while adding product", error: error.message });
   }
-}
+};
+
 
 
 
