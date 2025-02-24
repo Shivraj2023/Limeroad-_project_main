@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import BrandCard from './brandcard';
+import axios from 'axios';
 import './brandlist.css';
 
 
@@ -11,7 +12,52 @@ const BrandList = () => {
   const sub = searchParams.get('sub');   
   const [brandImages, setBrandImages] = useState([]);
 
-  useEffect(() => {
+
+  useEffect(()=>{
+    const Fetchdata=async()=>{
+
+     try{
+       const response= await axios.get("http://localhost:5000/products")
+       
+          const data=response.data.products;
+          let products=[];
+        
+          const categoryKey = main.toLocaleLowerCase();
+          if (sub?.toLowerCase() === 'myfeed') {
+             products=data;
+          }
+
+          else if (['men', 'women', 'kids'].includes(main?.toLowerCase())) {
+            const allProducts = data.filter(item=>item.mainCategory===categoryKey);
+             
+             products=sub?allProducts.filter((item)=>{
+              return (item) => item.category?.toLowerCase() === sub.toLowerCase()
+             }): allProducts;
+          }
+          const uniqueBrands = [
+            ...new Set(
+              products.map(item =>
+                JSON.stringify({
+                  brandImage: item.brand_image,
+                  brandName: item.brand_name || 'Brand',
+                  brandId:item._id,
+                })
+              )
+            )
+          ].map(JSON.parse);
+        setBrandImages(uniqueBrands);
+     }
+       catch(error){
+         console.error("Error fetching products:", error);
+      }
+     }
+
+     Fetchdata();
+   },[main, sub]);
+
+
+
+ /*  useEffect(() => {
     fetch("/assets/assets.json")
       .then((response) => response.json())
       .then((data) => {
@@ -58,7 +104,7 @@ const BrandList = () => {
         setBrandImages(uniqueBrands);
       })
       .catch((error) => console.error("Error fetching products:", error));
-  }, [main, sub]);
+  }, [main, sub]); */
   
   
 

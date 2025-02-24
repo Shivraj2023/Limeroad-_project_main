@@ -1,20 +1,56 @@
 import React, { useState,useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 
 import './banner.css';
 
-
 function Banner() {
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState({ men: [], women: [], kids: [], home: [] });
   const[selected,setSelected]=useState(searchParams.get('occasion')||'men');
    const[selectedAvatar,setSelectedAvatar]=useState('myfeed')
   
 
+   useEffect(()=>{
+    const Fetchdata=async()=>{
+
+     try{
+       const response= await axios.get("http://localhost:5000/products")
+        
+       const data=response.data.products;
+          
+         const categoryMap={
+           men:new Set(),
+           women:new Set(),
+           kids:new Set(),
+           home:new Set(),
+         }
+      data.forEach(item => {
+       if(item.mainCategory&&categoryMap[item.mainCategory]){
+         categoryMap[item.mainCategory].add(item)
+       }
+      });
+           
+      setCategories({
+         men:Array.from(categoryMap.men),
+         women:Array.from(categoryMap.women),
+         kids:Array.from(categoryMap.kids),
+         home:Array.from(categoryMap.home)
+       })
+       console.log(categories.home);
+     }
+       catch(error){
+         console.error("Error fetching products:", error);
+       }
+     }
+     Fetchdata();
+   },[]);
+
  
-  useEffect(() => {
+ /*  useEffect(() => {
     fetch("/assets/assets.json")
       .then((response) => response.json())
       .then((data) => {
@@ -46,7 +82,7 @@ function Banner() {
         });
         
       });
-  }, []);
+  }, []); */
   
   useEffect(() => {
     const main = searchParams.get('main') || 'men';

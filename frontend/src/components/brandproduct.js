@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./brandproduct.css"; // Custom styles
 
@@ -8,7 +9,50 @@ const BrandProduct = () => {
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
 
-  useEffect(() => {
+  useEffect(()=>{
+    const Fetchdata=async()=>{
+     try{
+       const response= await axios.get("http://localhost:5000/products")
+         const data=response.data.products;
+          
+           let categoryMap={
+           men:new Set(),
+           women:new Set(),
+           kids:new Set(),
+           home:new Set(),
+         }
+      data.forEach(item => {
+       if(item.mainCategory&&categoryMap[item.mainCategory]){
+         categoryMap[item.mainCategory].add(item)
+       }
+      });
+       categoryMap=({
+        men:Array.from(categoryMap.men),
+        women:Array.from(categoryMap.women),
+        kids:Array.from(categoryMap.kids),
+        home:Array.from(categoryMap.home)
+      })
+      const selectedCategory = categoryMap[category] || [];
+      const foundProduct = selectedCategory.find((p) => p._id === brandid);
+   
+      setProduct(foundProduct);
+        
+      if (foundProduct) {
+        const filteredProducts = selectedCategory.filter(
+          (p) => p.category === foundProduct.category
+        );
+        setSimilarProducts(filteredProducts)
+      }
+      }
+       catch(error){
+         console.error("Error fetching products:", error);
+       }
+     }
+     Fetchdata();
+   },[category, brandid]);
+   
+
+ /*  useEffect(() => {
     fetch("/assets/assets.json")
       .then((response) => response.json())
       .then((data) => {
@@ -28,7 +72,7 @@ const BrandProduct = () => {
           const filteredProducts = selectedCategory.filter(
             (p) => p.category === foundProduct.category
           );
-          setSimilarProducts(filteredProducts)
+          setSimilarProducts(filteredProducts) */
 
           // Ensure the found product is included if the filtered list is valid
           /* if (filteredProducts.length > 0) {
@@ -36,10 +80,10 @@ const BrandProduct = () => {
           } else {
             setSimilarProducts([foundProduct]);
           } */
-        }
+        /* }
       })
       .catch((error) => console.error("Error fetching product details:", error));
-  }, [category, brandid]);
+  }, [category, brandid]); */
 
   return (
     <div className="container mt-4">
