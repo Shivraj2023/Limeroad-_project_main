@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { register, login,logout, forgotPassword, resetPassword, addproducts } = require("./userControllers/routinglogic");
+const { register, login,logout, forgotPassword, resetPassword, addproducts,products } = require("./userControllers/routinglogic");
 const verifyToken=require("./middlewares/verifytoken");
 
 
@@ -17,6 +17,8 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
 router.post("/addproducts",verifyToken, addproducts);
+
+router.get("/products",products);
 
 
 

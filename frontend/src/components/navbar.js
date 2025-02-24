@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { authContext } from "./contextlogin";
+import axios from "axios";
 import Logout from "./logout";
 
 import "./navbar.css";
@@ -16,19 +17,65 @@ function Navbar() {
     ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
     : 0;
 
-  const [categories, setCategory] = useState({
+  const [categories, SetCategory] = useState({
     men: [],
     women: [],
     kids: [],
     home: [],
   });
 
-  const [activeDropdown, setActiveDropdown] = useState(null);
-  const [search, setSearch] = useState(false);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [activeDropdown, SetActiveDropdown] = useState(null);
+  const [search, SetSearch] = useState(false);
+  const [showProfileDropdown, SetShowProfileDropdown] = useState(false);
 
-  useEffect(() => {
-    fetch("/assets/assets.json")
+
+
+      useEffect(()=>{
+       const Fetchdata=async()=>{
+
+        try{
+          const response= await axios.get("http://localhost:5000/products")
+          
+             const data=response.data.products;
+             console.log("data======>",data);
+            const categoryMap={
+              men:new Set(),
+              women:new Set(),
+              kids:new Set(),
+              home:new Set(),
+            }
+         data.forEach(item => {
+          if(item.mainCategory&&categoryMap[item.mainCategory]){
+            categoryMap[item.mainCategory].add(item.category)
+          }
+         });
+             
+              
+          SetCategory({
+            men:Array.from(categoryMap.men),
+            women:Array.from(categoryMap.women),
+            kids:Array.from(categoryMap.kids),
+            home:Array.from(categoryMap.home)
+          })
+          console.log(categories.home);
+        
+        }
+          catch(error){
+            console.error("Error fetching products:", error);
+            SetCategory({
+              men: [],
+              women: [],
+              kids: [],
+              home: [],
+            });
+          }
+        }
+
+        Fetchdata();
+      },[]);
+
+  /* useEffect(() => {
+    fetch("/asSets/asSets.json")
       .then((response) => response.json())
       .then((data) => {
         const categoryMap = {
@@ -59,7 +106,7 @@ function Navbar() {
           );
         }
 
-        setCategory({
+        SetCategory({
           men: Array.from(categoryMap.men),
           women: Array.from(categoryMap.women),
           kids: Array.from(categoryMap.kids),
@@ -68,14 +115,14 @@ function Navbar() {
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
-        setCategory({
+        SetCategory({
           men: [],
           women: [],
           kids: [],
           home: [],
         });
       });
-  }, []);
+  }, []); */
 
   return (
     <nav
@@ -100,8 +147,8 @@ function Navbar() {
                 <div
                   key={category}
                   className="nav-item fs-6 dropdown-container"
-                  onMouseEnter={() => setActiveDropdown(category)}
-                  onMouseLeave={() => setActiveDropdown(null)}
+                  onMouseEnter={() => SetActiveDropdown(category)}
+                  onMouseLeave={() => SetActiveDropdown(null)}
                 >
                   <li className="nav-item">
                     <Link
@@ -154,7 +201,7 @@ function Navbar() {
             <div
               className="d-flex flex-column align-items-center p-3 ps-2"
               onClick={() => {
-                setSearch(true);
+                SetSearch(true);
               }}
             >
               <i className="fa-solid fa-magnifying-glass fs-6"></i>
@@ -175,8 +222,8 @@ function Navbar() {
             {/* Profile Dropdown */}
             <div
               className="d-flex flex-column align-items-center p-3 pe-1 profile-container"
-              onMouseEnter={() => setShowProfileDropdown(true)}
-              onMouseLeave={() => setShowProfileDropdown(false)}
+              onMouseEnter={() => SetShowProfileDropdown(true)}
+              onMouseLeave={() => SetShowProfileDropdown(false)}
             >
               <i className="fa-solid fa-user fs-6"></i>
               <span className="fs-6">Profile</span>
@@ -215,7 +262,7 @@ function Navbar() {
               autoFocus
             />
           </div>
-          <button className="close-btn" onClick={() => setSearch(false)}>
+          <button className="close-btn" onClick={() => SetSearch(false)}>
             ✖
           </button>
         </div>

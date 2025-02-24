@@ -157,8 +157,7 @@ const addproducts = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized: Vendor ID missing" });
     }
     console.log("Vendor ID:", vendor_id);
-
-    // Construct the product data explicitly:
+   
     const productData = {
       mainCategory: req.body.mainCategory,
       title: req.body.title,
@@ -169,13 +168,13 @@ const addproducts = async (req, res) => {
       offer_percent: req.body.offer_percent,
       brand_name: req.body.brand_name,
       brand_image: req.body.brand_image,
-      size: req.body.size, // expecting an array
+      size: req.body.size,
       image: req.body.image,
       reviews: {
         ratings: req.body.reviews?.ratings,
         count: req.body.reviews?.count
       },
-      vendorId: vendor_id, // Ensure the correct property name
+      vendorId: vendor_id, 
     };
 
     console.log("Final product data:", productData);
@@ -190,9 +189,22 @@ const addproducts = async (req, res) => {
   }
 };
 
+  const products=async(req,res)=>{
+     try{
+
+      const products= await Product.find({});
+
+      res.status(200).json({products});
+
+     } catch(error){
+
+      res.status(500).json({message:"unable to fetch the products",error:error.message})
+     }
+  }
 
 
 
 
 
-module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts };
+
+module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products };
