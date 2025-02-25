@@ -152,7 +152,7 @@ const resetPassword = async (req, res) => {
 const addproducts = async (req, res) => {
     
   try {
-    
+
     const vendor_id = req.user && req.user.id;
     if (!vendor_id) {
       return res.status(401).json({ message: "Unauthorized: Vendor ID missing" });
@@ -246,7 +246,6 @@ const addproducts = async (req, res) => {
     try {
       const products = await Product.find({});
      
-
       const updatedProducts = products.map((product) => {
         const plainProduct = product._doc ? product._doc : product;
       
@@ -273,8 +272,7 @@ const addproducts = async (req, res) => {
         };
       });
       
-      console.log("Updated products:", updatedProducts);
-      res.status(200).json({ products: updatedProducts });
+    res.status(200).json({ products: updatedProducts });
     } 
     catch (error) {
        console.error("Error while fetching products:", error);
@@ -284,14 +282,43 @@ const addproducts = async (req, res) => {
       });
     }
   };
+
+   const vendorProducts=async(req,res)=>{
+     
+      try{
+        const vendor_id = req.user && req.user.id;
+      if (!vendor_id) {
+      return res.status(401).json({ message: "Unauthorized: Vendor ID missing" });
+       }
+
+       const products=await Product.find({vendorId:vendor_id});
+        
+
+       const updatedProducts = products.map((product) => {
+        const plainProduct = product._doc ? product._doc : product;
+      
+      let updatedImage = plainProduct.image;
+        if (updatedImage && updatedImage.trim() !== "") {
+          updatedImage = updatedImage.startsWith("http")
+            ? updatedImage
+            : `${req.protocol}://${req.get("host")}${updatedImage}`;
+        }
+      
+        return {
+          ...plainProduct,
+          ...(updatedImage ? { image: updatedImage } : {}),
+        };
+      });
+        
+       res.status(200).json({products:updatedProducts});
+      } 
+       catch(error){
+         res.status(500).json({message:"failed to fetch vendor products",
+          error:error.message
+         })
+      }
+   };
   
  
-  
 
-
-
-
-
-
-
-module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products };
+module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products,vendorProducts };

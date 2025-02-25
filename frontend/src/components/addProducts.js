@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import './addproducts.css';
 
  
@@ -126,8 +128,14 @@ const AddProducts = () => {
         }
       });
       if (response.status === 200 || response.status === 201){
-          console.log(response.data.message);
-          alert("success message:",response.data.message)
+         
+         Swal.fire({
+                     icon:'Success',
+                     title: 'Success!',
+                    text: response.data.message||'You added product  successfully.',
+                   });
+         
+          
           console.log('result=======>',response.data)
           console.log(response.data.message);
           setProduct({
@@ -154,13 +162,32 @@ const AddProducts = () => {
 
      } 
      catch(error){
-      alert(" error message:",error.response.data.error)
+      Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "There was some error while adding the product.Please try again.",
+              });
       console.log("error--------->",error.response.data.message);
      }
     
   };
 
   return (
+    <div className='vendor-page'>
+
+        <nav className="navbar navbar-expand-lg navbar-light bg-white" style={{ height: '60px',  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
+        <div className="container-fluid d-flex align-items-center">
+          <Link className="navbar-brand" to="/?main=men" style={{ paddingLeft: '50px' }}>
+            <img
+              src="https://logos-world.net/wp-content/uploads/2023/01/Limeroad-Logo.jpg"
+              alt="Logo"
+              className="d-inline-block align-middle"
+              style={{ height: '50px', width: 'auto' }}
+            />
+          </Link>
+        </div>
+      </nav>
+
     <div className="add-products">
       <h1 className='add-process_heading'>Add Products</h1>
       <form onSubmit={handleSubmit}>
@@ -227,8 +254,7 @@ const AddProducts = () => {
          options={categories}
          onChange={handleCategoryChange}
           placeholder="Select a category"
-    
-   
+       
   />
 </div>
 
@@ -346,6 +372,13 @@ const AddProducts = () => {
           <button type="submit" className="add-products_btn">Add Product</button>
         </div>
       </form>
+
+    {/* buttons to render to other pages */}
+      <div className="navigation-buttons">
+        <Link to="/" className="nav-btn">Home</Link>
+        <Link to="/vendor-products" className="nav-btn">View My Products</Link>
+      </div>
+    </div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ import ForgotPassword from './forget_passwoed';
 import { Outlet,useLocation } from 'react-router-dom';
 import Resetpassword from './resetpassword';
 import AddProducts from './addProducts';
-
+import VendorProducts from './vendorProducts';
 
 
 
@@ -52,6 +52,7 @@ function Router() {
           <Route path='/cartpage' element={<Cartproducts/>}/>
           <Route path='/payment' element={<Payment/>}/>
           <Route path='/addproducts' element={<AddProducts/>}/>
+          <Route path='/vendor-products'  element={<VendorProducts/>}/>
         </Routes>
       
     </BrowserRouter>
