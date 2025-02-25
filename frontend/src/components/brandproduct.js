@@ -91,7 +91,7 @@ const BrandProduct = () => {
       <div className="row">
         {similarProducts.map((product, index) => (
           <div key={product.id} className="col-md-3">
-            <Link to={`/products/${category}/${product.id}`} className="text-decoration-none">
+            <Link to={`/products/${category}/${product._id}`} className="text-decoration-none">
               <div className="card product-card">
                 <span className="badge badge-number">{index + 1}</span>
                 <img

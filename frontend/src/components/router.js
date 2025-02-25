@@ -43,7 +43,7 @@ function Router() {
           <Route path="/brand/:category/:brandid" element={<BrandProduct />} />
           <Route path="/:category/:subcategory" element={<Products/>}/>
           <Route path="/:category" element={<Products/>}/>
-          <Route path="/products/:category/:id" element={<Productdetails />} />
+          <Route path="/products/:category/:_id" element={<Productdetails />} />
           <Route path='/login' element={<Login/>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/forgot-password' element={<ForgotPassword/>}/>

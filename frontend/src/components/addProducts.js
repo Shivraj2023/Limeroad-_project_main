@@ -97,7 +97,9 @@ const AddProducts = () => {
       });
       if (response.status === 200 || response.status === 201){
           console.log(response.data.message);
+          alert("success message:",response.data.message)
           console.log('result=======>',response.data)
+          console.log(response.data.message);
           setProduct({
             mainCategory: "",
             title: "",
@@ -119,6 +121,7 @@ const AddProducts = () => {
 
      } 
      catch(error){
+      alert(" error message:",error.response.data.error)
       console.log("error--------->",error.response.data.message);
      }
     /* console.log("Submitted product:", product); */

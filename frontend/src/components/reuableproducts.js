@@ -15,8 +15,41 @@ const ProductPage = ( {products}) => {
    const[filters,setFilters]=useState({price:null,discount:null})
    const [selectedFilters, setSelectedFilters] = useState({});
    const [categories, setCategories] = useState([]);
+
+
+      useEffect(()=>{
+        if(category){
+           
+          let categoryKey=category;
+         if (categoryKey && products[categoryKey]){
+            const categoryList = [...new Set(products[categoryKey].map((product) => product.category))];
+             setCategories(categoryList); 
+          };
+
+          if (subcategory) {
+            const filtered = products[categoryKey]?.filter(
+           (product) =>
+             product.category.toLowerCase() === subcategory.toLowerCase() 
+            ) 
+         setFilteredProducts(filtered);
+          setBaseFilteredProducts(filtered)
+         }  
+         else {
+          const filtered = products[categoryKey]
+        setFilteredProducts(filtered);
+        setBaseFilteredProducts(filtered)
+      }
+        } 
+         else{
+          setBaseFilteredProducts([]);
+          setFilteredProducts([]);
+          setCategories([]);
+        }
+      },[category, subcategory, products])
+
+
   
-   useEffect(() => {
+   /* useEffect(() => {
       if (category) {
       
       let categoryKey = "";
@@ -34,13 +67,13 @@ const ProductPage = ( {products}) => {
       if (subcategory) {
            const filtered = products[categoryKey]?.filter(
           (product) =>
-            product.category.toLowerCase() === subcategory.toLowerCase() // Filter by subcategory
+            product.category.toLowerCase() === subcategory.toLowerCase() 
            ) 
 
         setFilteredProducts(filtered);
         setBaseFilteredProducts(filtered)
       } else {
-        // Filter products based only on category
+       
         const filtered = products[categoryKey]
                
         setFilteredProducts(filtered);
@@ -51,14 +84,13 @@ const ProductPage = ( {products}) => {
       setFilteredProducts([]);
       setCategories([]);
     }
-  }, [category, subcategory, products]);
+  }, [category, subcategory, products]); */
 
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
-
 
   const applyFilters = () => {
     setSelectedFilters(filters); 
@@ -74,9 +106,7 @@ const ProductPage = ( {products}) => {
 
       setFilteredProducts(filtered);
   };
-
-  
-  
+ 
 
   return (
     <div className="container-fluid">
@@ -122,7 +152,7 @@ const ProductPage = ( {products}) => {
               filteredProducts.map((product) => (
                 <div key={product.id} className="col-md-4 mb-4">
                   <div className="card new-card">
-                  <Link to={`/products/${category}/${product.id}`}>
+                  <Link to={`/products/${category}/${product._id}`}>
   <img key={product.image} src={product.image} className="card-img-top" alt={product.name} />
 </Link>
 

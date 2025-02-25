@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import BrandCard from './brandcard';
 import axios from 'axios';
 import './brandlist.css';
@@ -12,7 +12,6 @@ const BrandList = () => {
   const sub = searchParams.get('sub');   
   const [brandImages, setBrandImages] = useState([]);
 
-
   useEffect(()=>{
     const Fetchdata=async()=>{
 
@@ -22,7 +21,7 @@ const BrandList = () => {
           const data=response.data.products;
           let products=[];
         
-          const categoryKey = main.toLocaleLowerCase();
+          const categoryKey = main.toLowerCase();
           if (sub?.toLowerCase() === 'myfeed') {
              products=data;
           }
@@ -30,9 +29,10 @@ const BrandList = () => {
           else if (['men', 'women', 'kids'].includes(main?.toLowerCase())) {
             const allProducts = data.filter(item=>item.mainCategory===categoryKey);
              
-             products=sub?allProducts.filter((item)=>{
-              return (item) => item.category?.toLowerCase() === sub.toLowerCase()
-             }): allProducts;
+             products=sub
+             ?allProducts.filter((item)=> item.category?.toLowerCase() === sub.toLowerCase())
+             : allProducts;
+             
           }
           const uniqueBrands = [
             ...new Set(
@@ -51,7 +51,6 @@ const BrandList = () => {
          console.error("Error fetching products:", error);
       }
      }
-
      Fetchdata();
    },[main, sub]);
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Button, Spinner, Table } from "react-bootstrap";
 import {Rating} from "@mui/material";
@@ -7,7 +8,7 @@ import { addToCart} from './cartslice';
 import "./productdetails.css";
 
 function Productdetails() {
-  const { category, id } = useParams();
+  const { category, _id } = useParams();
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -15,6 +16,69 @@ function Productdetails() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.items);
 
+
+  useEffect(()=>{
+    const Fetchdata=async()=>{
+
+     try{
+       const response= await axios.get("http://localhost:5000/products")
+       
+          const data=response.data.products;
+
+          console.log("==============",data);
+          
+         const categorykeys={
+           men:new Set(),
+           women:new Set(),
+           kids:new Set(),
+           home:new Set(),
+         }
+      data.forEach(item => {
+       if(item.mainCategory&&categorykeys[item.mainCategory]){
+         categorykeys[item.mainCategory].add(item)
+       }
+      });         
+           
+         const categoryMap=({
+         men:Array.from(categorykeys.men),
+         women:Array.from(categorykeys.women),
+         kids:Array.from(categorykeys.kids),
+         home:Array.from(categorykeys.home)
+       })
+
+       const selectedCategory = categoryMap[category.toLowerCase()];
+
+       console.log("slectedcategeory=======>>>>>",selectedCategory);
+
+       if (selectedCategory) {
+        const foundProduct = selectedCategory.find((p) => p._id === _id);
+        console.log("foundproduct____________",foundProduct);
+        console.log("id---------",_id);
+        setProduct(foundProduct);
+
+        if (foundProduct) {
+          const filteredProducts = selectedCategory.filter(
+            (p) => p.category === foundProduct.category && p._id !== foundProduct._id
+          );
+          setSimilarProducts(filteredProducts);
+        }
+       }
+       else {
+        console.error(`Category "${category}" not found`);
+      }    
+     
+     }
+       catch(error){
+         console.error("Error fetching products:", error);
+       }
+     }
+
+     Fetchdata();
+   },[category, _id]);
+
+
+
+/* 
   useEffect(() => {
     fetch("/assets/assets.json")
       .then((response) => response.json())
@@ -45,7 +109,7 @@ function Productdetails() {
       .catch((error) => {
         console.error("Error fetching product details:", error);
       });
-  }, [category, id]);
+  }, [category, id]); */
 
   const handlesize=(size)=>{
     setSelectedSize(size); 
@@ -54,7 +118,7 @@ function Productdetails() {
 
   const handletocart=()=>{
     if(!selectedSize){
-      alert("Please select a size before adding to cart!"); // Prevent adding without size
+      alert("Please select a size before adding to cart!"); 
       return;
     } 
      const cartItem = {
@@ -126,7 +190,7 @@ function Productdetails() {
           style={{ width: "100%", margin: "0 auto", padding: "8px" }} 
         >
           {/* Product Image */}
-          <Link to={`/products/${category}/${item.id}`}>
+          <Link to={`/products/${category}/${item._id}`}>
             <img 
               src={item.image} 
               className="img-fluid rounded" 
