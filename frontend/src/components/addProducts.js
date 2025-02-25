@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import './addproducts.css';
+
  
 const categories = [
   { value: "t-shirt", label: "t-shirt" },
@@ -28,6 +29,10 @@ const categories = [
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
 const AddProducts = () => {
+  const [brandimageFile,setBrandiamgeFile]=useState(null);
+  const [productimageFile,setProductimageFile]=useState(null);
+
+
   const [product, setProduct] = useState({
     mainCategory: "",
     title: "",
@@ -83,16 +88,41 @@ const AddProducts = () => {
     }
   };
 
+    const handleBrandImageChange=(e)=>{
+         setBrandiamgeFile(e.target.files[0]);
+    }
+    const handleProductImageChange=(e)=>{
+      setProductimageFile(e.target.files[0]);
+    }
+
   const handleSubmit =  async(e) => {
     e.preventDefault();
      try{
       const token = localStorage.getItem("authToken");
-      console.log("tokenn------",token);
-      const response= await axios.post("http://localhost:5000/addproducts",product,{
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+     
+          const formData= new FormData();
+
+      formData.append("mainCategory", product.mainCategory);
+      formData.append("title", product.title);
+      formData.append("price", product.price);
+      formData.append("description", product.description);
+      formData.append("category", product.category);
+      formData.append("original_price", product.original_price);
+      formData.append("offer_percent", product.offer_percent);
+      formData.append("brand_name", product.brand_name);
+     formData.append("size", JSON.stringify(product.size));
+      formData.append("reviews", JSON.stringify(product.reviews));
+       
+      if (brandimageFile) {
+        formData.append("brand_image", brandimageFile);
+      }
+      if (productimageFile) {
+        formData.append("image", productimageFile);
+      }
+
+      const response = await axios.post("http://localhost:5000/addproducts",formData,{
+           headers: {
+           Authorization: `Bearer ${token}`
         }
       });
       if (response.status === 200 || response.status === 201){
@@ -117,6 +147,9 @@ const AddProducts = () => {
               count: ""
             }
           });
+
+          setBrandiamgeFile(null);
+          setProductimageFile(null);
         }
 
      } 
@@ -124,7 +157,7 @@ const AddProducts = () => {
       alert(" error message:",error.response.data.error)
       console.log("error--------->",error.response.data.message);
      }
-    /* console.log("Submitted product:", product); */
+    
   };
 
   return (
@@ -195,7 +228,7 @@ const AddProducts = () => {
          onChange={handleCategoryChange}
           placeholder="Select a category"
     
-    // value={categories.find(option => option.value === product.category)}
+   
   />
 </div>
 
@@ -239,15 +272,14 @@ const AddProducts = () => {
         </div>
 
         <div className="add-products_form-group">
-          <label htmlFor="brand_image">Brand Image URL:</label>
+          <label htmlFor="brand_image">Brand Image File:</label>
           <input 
-            type="url"
+            type="file"
             id="brand_image"
             name="brand_image"
-            value={product.brand_image}
-            onChange={handleChange}
+            onChange={handleBrandImageChange}
             className="add-products_input"
-            placeholder="Enter the brand image URL"
+            accept="image/jpeg, image/jpg, image/png"
           />
         </div>
 
@@ -270,15 +302,14 @@ const AddProducts = () => {
         </div>
 
         <div className="add-products_form-group">
-          <label htmlFor="image">Product Image URL:</label>
+          <label htmlFor="image">Product Image File:</label>
           <input 
-            type="url"
+            type="file"
             id="image"
             name="image"
-            value={product.image}
-            onChange={handleChange}
+            onChange={handleProductImageChange}
             className="add-products_input"
-            placeholder="Enter the product image URL"
+            accept="image/jpeg, image/jpg, image/png"
           />
         </div>
 

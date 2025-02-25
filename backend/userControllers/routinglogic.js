@@ -151,12 +151,39 @@ const resetPassword = async (req, res) => {
 
 const addproducts = async (req, res) => {
   try {
-    console.log("Authenticated user:", req.user);
+   
     const vendor_id = req.user && req.user.id;
     if (!vendor_id) {
       return res.status(401).json({ message: "Unauthorized: Vendor ID missing" });
     }
-    console.log("Vendor ID:", vendor_id);
+        
+
+        console.log("reqbody===================>",req.body);
+
+       const brandiamgepath=req.files?.brand_image
+       ?`/uploaded_images/${req.files.brand_image[0].filename}`
+       :req.body.brand_image;
+       const imagepath=req.files?.image
+       ?`/uploaded_images/${req.files.image[0].filename}`
+       :req.body.image;
+
+          let parsedsize=req.body.size;
+          if(typeof parsedsize==="string"){
+            try {
+              parsedsize = JSON.parse(req.body.size);
+            } catch (error) {
+              console.error("Error parsing size:", error);
+          } }
+
+          let parsedReviews = req.body.reviews;
+         if (typeof req.body.reviews === "string") {
+          try {
+             parsedReviews = JSON.parse(req.body.reviews);
+          } catch (error) {
+             console.error("Error parsing reviews:", error);
+         }
+     }
+
    
     const productData = {
       mainCategory: req.body.mainCategory,
@@ -166,19 +193,18 @@ const addproducts = async (req, res) => {
       category: req.body.category,
       original_price: req.body.original_price,
       offer_percent: req.body.offer_percent,
-      brand_name: req.body.brand_name,
-      brand_image: req.body.brand_image,
-      size: req.body.size,
-      image: req.body.image,
+      brand_name:req.body.brand_name,
+      brand_image: brandiamgepath,
+      size: parsedsize,
+      image: imagepath,
       reviews: {
-        ratings: req.body.reviews?.ratings,
-        count: req.body.reviews?.count
+        ratings:parsedReviews?.ratings,
+        count:parsedReviews?.count
       },
       vendorId: vendor_id, 
     };
 
-    console.log("Final product data:", productData);
-
+    
     const product = new Product(productData);
     const savedProduct = await product.save();
 
