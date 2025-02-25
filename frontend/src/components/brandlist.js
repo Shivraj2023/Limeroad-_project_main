@@ -21,7 +21,7 @@ const BrandList = () => {
           const data=response.data.products;
           let products=[];
         
-          const categoryKey = main.toLowerCase();
+          const categoryKey = main?.toLowerCase();
           if (sub?.toLowerCase() === 'myfeed') {
              products=data;
           }

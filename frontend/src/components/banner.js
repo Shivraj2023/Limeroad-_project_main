@@ -40,7 +40,7 @@ function Banner() {
          kids:Array.from(categoryMap.kids),
          home:Array.from(categoryMap.home)
        })
-       console.log(categories.home);
+       
      }
        catch(error){
          console.error("Error fetching products:", error);

@@ -150,15 +150,13 @@ const resetPassword = async (req, res) => {
 
 
 const addproducts = async (req, res) => {
+    
   try {
-   
+    
     const vendor_id = req.user && req.user.id;
     if (!vendor_id) {
       return res.status(401).json({ message: "Unauthorized: Vendor ID missing" });
-    }
-        
-
-        console.log("reqbody===================>",req.body);
+    }      
 
        const brandiamgepath=req.files?.brand_image
        ?`/uploaded_images/${req.files.brand_image[0].filename}`
@@ -215,18 +213,81 @@ const addproducts = async (req, res) => {
   }
 };
 
-  const products=async(req,res)=>{
+ /*  const products=async(req,res)=>{
      try{
-
+       
       const products= await Product.find({});
+      
+         const updatedProducts=products.map((product)=>{
+          const plainProduct = product._doc ? product._doc : product;
+            return{
+              ...plainProduct,
+              brand_image:product.brand_image.startsWith("http")
+              ? product.brand_image
+              :`${req.protocol}://${req.get("host")}${product.brand_image}`,
+              image:product.image.startsWith("http")
+              ? product.image
+              :`${req.protocol}://${req.get("host")}${product.image}`,
 
-      res.status(200).json({products});
+            }
+        })
+        console.log("upadted products=======>",updatedProducts);
+
+      res.status(200).json({updatedProducts});
 
      } catch(error){
 
       res.status(500).json({message:"unable to fetch the products",error:error.message})
      }
   }
+ */
+     
+  const products = async (req, res) => {
+    try {
+      const products = await Product.find({});
+     
+
+      const updatedProducts = products.map((product) => {
+        const plainProduct = product._doc ? product._doc : product;
+      
+        let updatedBrandImage = plainProduct.brand_image;
+        if (updatedBrandImage && updatedBrandImage.trim() !== "") {
+         
+          updatedBrandImage = updatedBrandImage.startsWith("http")
+            ? updatedBrandImage
+            : `${req.protocol}://${req.get("host")}${updatedBrandImage}`;
+        }
+      
+        let updatedImage = plainProduct.image;
+        if (updatedImage && updatedImage.trim() !== "") {
+          updatedImage = updatedImage.startsWith("http")
+            ? updatedImage
+            : `${req.protocol}://${req.get("host")}${updatedImage}`;
+        }
+      
+        return {
+          ...plainProduct,
+          
+          ...(updatedBrandImage ? { brand_image: updatedBrandImage } : {}),
+          ...(updatedImage ? { image: updatedImage } : {}),
+        };
+      });
+      
+      console.log("Updated products:", updatedProducts);
+      res.status(200).json({ products: updatedProducts });
+    } 
+    catch (error) {
+       console.error("Error while fetching products:", error);
+        res.status(500).json({
+        message: "Unable to fetch the products",
+        error: error.message,
+      });
+    }
+  };
+  
+ 
+  
+
 
 
 

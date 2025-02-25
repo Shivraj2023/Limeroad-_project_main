@@ -28,8 +28,6 @@ function Navbar() {
   const [search, SetSearch] = useState(false);
   const [showProfileDropdown, SetShowProfileDropdown] = useState(false);
 
-
-
       useEffect(()=>{
        const Fetchdata=async()=>{
 
@@ -57,7 +55,7 @@ function Navbar() {
             kids:Array.from(categoryMap.kids),
             home:Array.from(categoryMap.home)
           })
-          console.log(categories.home);
+          
         
         }
           catch(error){
