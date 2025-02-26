@@ -55,6 +55,7 @@ function Productdetails() {
         console.log("foundproduct____________",foundProduct);
         console.log("id---------",_id);
         setProduct(foundProduct);
+        console.log("foundproduct_yd----------",foundProduct._id);
 
         if (foundProduct) {
           const filteredProducts = selectedCategory.filter(
@@ -122,7 +123,7 @@ function Productdetails() {
       return;
     } 
      const cartItem = {
-      id: product.id,
+      id:product._id,
       title: product.title,
       price: product.price,
       image: product.image,

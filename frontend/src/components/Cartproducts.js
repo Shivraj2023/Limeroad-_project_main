@@ -42,7 +42,7 @@ function Cartproducts() {
             {/* Left column: Cart items */}
             <div className="col-md-8">
               {cartItems.map((item) => (
-                <div key={item.id} className="col-12 mb-4">
+                <div key={item._id} className="col-12 mb-4">
                   <div className="cart-item d-flex align-items-center" style={{ backgroundColor: 'white', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '8px', height: '270px', width: '700px' }}>
                     {/* Image Section */}
                     <div className="cart-item-image" style={{ height: '200px', width: '200px' }}>

@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { register, login,logout, forgotPassword, resetPassword, addproducts,products,vendorProducts } = require("./userControllers/routinglogic");
+const { register, login,logout, forgotPassword, resetPassword, addproducts,products,vendorProducts,Cart } = require("./userControllers/routinglogic");
 const verifyToken=require("./middlewares/verifytoken");
 const upload=require("./userControllers/multersetup");
 
@@ -22,6 +22,8 @@ router.post("/addproducts",verifyToken, upload.fields([{name:"brand_image",maxCo
 router.get("/products",products);
 
 router.get("/vendorProducts",verifyToken,vendorProducts);
+
+router.post("/cartproducts",verifyToken,Cart);
 
 
 

@@ -8,6 +8,7 @@ const Customer = require("../models/customer");
 const Vendor = require("../models/vendor");
 const Admin = require("../models/admin");
 const Product =require("../models/products");
+const CartItem=require("../models/cartitem");
 const transporter = require("./transporter");
 const verifyToken=require("../middlewares/verifytoken");
 
@@ -293,7 +294,6 @@ const addproducts = async (req, res) => {
 
        const products=await Product.find({vendorId:vendor_id});
         
-
        const updatedProducts = products.map((product) => {
         const plainProduct = product._doc ? product._doc : product;
       
@@ -318,7 +318,28 @@ const addproducts = async (req, res) => {
          })
       }
    };
+
+
+   const Cart=async(req,res)=>{
+    const{cartitems}=req.body;
+    try{
+      const customerId=req.user&& req.user.id;
+      
+      let cart = await CartItem.find({customerId:customerId})
+
+      if(cart) {
+         cart.cartItems=cartitems;
+      }  else{
+        cart= new CartItem({customerId,cartitems})
+      }
+     await cart.save();
+     res.status(200).json({success:true,cartItems:cart})
+    } 
+    catch(error){
+     res.status(500).json({ error: "Something went wrong" });
+     }
+   }
   
  
 
-module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products,vendorProducts };
+module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products,vendorProducts,Cart};
