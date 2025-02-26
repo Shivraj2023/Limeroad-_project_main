@@ -1,11 +1,15 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { SET_CART_ITEMS } from "./cartslice";
+import { useDispatch } from 'react-redux';
 import Swal from "sweetalert2";
 import axios from "axios";
 import { authContext } from "./contextlogin";
 import "./Login.css"; 
 
 const Login = () => {
+  const dispatch=useDispatch();
+
     const useauthContext=useContext(authContext);
     const {login,setUsertype}=useauthContext;
 
@@ -25,15 +29,28 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-      
-           const token=response.data.token;
-           console.log("token-----",token);
-           localStorage.setItem("authToken",token);
-      
+         const token=response.data.token;
+         console.log("token-----",token);
+          
+        localStorage.setItem("authToken",token);
         localStorage.setItem("usertype",response.data.usertype);
         
-        setUsertype(response.data.usertype);
-        login(response.data.name);
+       await setUsertype(response.data.usertype);
+       await login(response.data.name);
+
+        const cartResponse= await axios.get("http://localhost:5000/getcartproducts",{
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        });
+
+        if (cartResponse.status === 200) {
+          console.log("cart response========",cartResponse.data.cartItems)
+          const cartItems = cartResponse.data.cartItems||[]; 
+          dispatch(SET_CART_ITEMS(cartItems));
+
+          localStorage.setItem("cart", JSON.stringify(cartItems));  
+        }
            
          Swal.fire({
                  title: 'Success!',

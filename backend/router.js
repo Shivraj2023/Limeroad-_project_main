@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { register, login,logout, forgotPassword, resetPassword, addproducts,products,vendorProducts,Cart } = require("./userControllers/routinglogic");
+const { register, login,logout, forgotPassword, resetPassword, addproducts,products,vendorProducts,Cart,getCartItems } = require("./userControllers/routinglogic");
 const verifyToken=require("./middlewares/verifytoken");
 const upload=require("./userControllers/multersetup");
 
@@ -23,8 +23,8 @@ router.get("/products",products);
 
 router.get("/vendorProducts",verifyToken,vendorProducts);
 
-router.post("/cartproducts",verifyToken,Cart);
+router.post("/addcartproducts", verifyToken,Cart);
 
-
+router.get("/getcartproducts",verifyToken, getCartItems);
 
 module.exports = router;

@@ -119,11 +119,10 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   const { email, password,resetpassToken } = req.body;
-  console.log("enetred email=====",email);
-  console.log("resetpasstoken======",resetpassToken);
+  
   try {
     const payloademail=jwt.verify(resetpassToken,process.env.JWT_SECRET);
-    console.log("payload email=======",payloademail.email);
+    
 
     if(payloademail.email!==email) {
       return res.status(401).json({ message: "Invalid token for the provided email" });
@@ -321,25 +320,67 @@ const addproducts = async (req, res) => {
 
 
    const Cart=async(req,res)=>{
-    const{cartitems}=req.body;
+    
     try{
+      const{cartItems}=req.body;
       const customerId=req.user&& req.user.id;
-      
-      let cart = await CartItem.find({customerId:customerId})
+          
+      const formattedCartItems = cartItems.map(item => ({
+        productId: item.id, 
+        title: item.title,
+        price: Number(item.price), 
+        image: item.image,
+        category: item.category,
+        size: item.size,
+        quantity: Number(item.quantity) 
+      }));
 
-      if(cart) {
-         cart.cartItems=cartitems;
-      }  else{
-        cart= new CartItem({customerId,cartitems})
+           
+      let cart = await CartItem.findOne({customerId:customerId})
+
+      if (cart) {
+          formattedCartItems.forEach((newItem) => {
+          const existingItem = cart.cartItems.find(
+            (item) => item.productId === newItem.productId && item.size === newItem.size
+          );
+  
+          if (existingItem) {
+             existingItem.quantity += newItem.quantity;
+          } else {
+             cart.cartItems.push(newItem);
+          }
+        });
+      } else {
+           cart = new CartItem({
+          customerId,
+          cartItems:formattedCartItems
+        });
       }
      await cart.save();
-     res.status(200).json({success:true,cartItems:cart})
+     console.log(cart.cartItems);
+     res.status(200).json({success:true,cartItems:cart.cartItems})
     } 
     catch(error){
      res.status(500).json({ error: "Something went wrong" });
      }
    }
+
+
+   const getCartItems=async(req,res)=>{
+       try{
+        console.log("Request User Object:", req.user); //
+        const customerId=req.user&& req.user.id;
+        console.log("cutomerid------>",customerId)
+        const cartData = await CartItem.findOne({ customerId }) || { cartItems: [] };
+         
+       const cartItems = cartData && Array.isArray(cartData.cartItems) ? cartData.cartItems : [];
+        res.status(200).json({cartItems})
+
+      } catch(error){
+         res.status(500).json({message:"error while fetching cart items"})
+      }
+   }
   
  
 
-module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products,vendorProducts,Cart};
+module.exports = { register, login,logout, forgotPassword, resetPassword,addproducts,products,vendorProducts,Cart,getCartItems};

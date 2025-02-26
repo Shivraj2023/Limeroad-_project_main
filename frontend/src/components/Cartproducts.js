@@ -1,14 +1,28 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect,useContext} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+ import { authContext } from './contextlogin'; 
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, increaseQuantity, decreaseQuantity } from './cartslice';
 
 function Cartproducts() {
+  const naviagate=useNavigate()
+
+    const useauthContext=useContext(authContext);
+   const {isloggedin}=useauthContext;
+
+   useEffect(()=>{
+    if(!isloggedin){
+       alert('only logged in users are allowed to view this page so pls login and comeback')
+      naviagate('/login')
+    }
+   },[isloggedin]);
+
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
-
   
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const totalPrice = Array.isArray(cartItems)
+  ? cartItems.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 0), 0)
+  : 0;
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));

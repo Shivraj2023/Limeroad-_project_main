@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
 import { authContext } from './contextlogin';
+import { CLEAR_CART } from './cartslice';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
@@ -8,17 +10,35 @@ const Logout = () => {
     const useauthContext=useContext(authContext);
     const{username,logout,usertype}=useauthContext;
       
+      const dispatch=useDispatch();
     const handleLogout=async()=>{
         
         try{
-            const response= await axios.post("http://localhost:5000/logout");
+
+          const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+           console.log(cartItems);
+          if(cartItems.length>0){
+            const token = localStorage.getItem("authToken"); 
+            console.log("token sent for request====>",token);
+            const addCartResponse = await axios.post("http://localhost:5000/addcartproducts", { cartItems }, {
+         headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+       });
+
+          }
+
+          const response= await axios.post("http://localhost:5000/logout");
            
             Swal.fire({
                 icon:'info',
                  title: 'Success!',
                  text: response.data.message||'You logged in successfully.',
              });
-       localStorage.removeItem("authToken");
+             localStorage.removeItem("authToken");
+             localStorage.removeItem("cart");
+             dispatch(CLEAR_CART());
              logout();
 
         }  catch(error){
@@ -29,8 +49,7 @@ const Logout = () => {
               });
             console.log("logout failed",error);
         }
-       
-    }
+     }
 
 
   return (

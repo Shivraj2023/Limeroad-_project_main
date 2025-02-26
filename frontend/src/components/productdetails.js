@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Button, Spinner, Table } from "react-bootstrap";
 import {Rating} from "@mui/material";
 import { useDispatch ,useSelector} from 'react-redux';
+import { authContext } from "./contextlogin";
 import { addToCart} from './cartslice'; 
 import "./productdetails.css";
 
 function Productdetails() {
+     const useauthContext=useContext(authContext);
+    const {isloggedin}=useauthContext;
+
   const { category, _id } = useParams();
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
@@ -52,10 +56,10 @@ function Productdetails() {
 
        if (selectedCategory) {
         const foundProduct = selectedCategory.find((p) => p._id === _id);
-        console.log("foundproduct____________",foundProduct);
+       
         console.log("id---------",_id);
         setProduct(foundProduct);
-        console.log("foundproduct_yd----------",foundProduct._id);
+        
 
         if (foundProduct) {
           const filteredProducts = selectedCategory.filter(
@@ -118,6 +122,11 @@ function Productdetails() {
 
 
   const handletocart=()=>{
+     if(!isloggedin){
+       alert("you are not allowed to add products to cart so pls login and comeback")
+       return;
+     }
+
     if(!selectedSize){
       alert("Please select a size before adding to cart!"); 
       return;
