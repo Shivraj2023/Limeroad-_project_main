@@ -6,7 +6,7 @@ const cartitemsschema= new mongoose.Schema({
     customerId:{type:String,ref:Customer,required:true},
     cartItems:[
         {
-        productId:{type:String,ref:Product,required:true},
+        id:{type:String,ref:Product,required:true},
         title: { type: String, required: true },
        price: { type: Number, required: true },
        image: { type: String, required: true },

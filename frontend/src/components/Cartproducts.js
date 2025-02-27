@@ -23,9 +23,12 @@ function Cartproducts() {
   const totalPrice = Array.isArray(cartItems)
   ? cartItems.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 0), 0)
   : 0;
-
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
+    if (cartItems.length === 0) {
+      localStorage.removeItem("cart");  
+    } else {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    }
   }, [cartItems]);
 
   return (

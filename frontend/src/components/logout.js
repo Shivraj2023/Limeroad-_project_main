@@ -16,8 +16,9 @@ const Logout = () => {
         try{
 
           const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+          console.log("cartitems here when i deletd all the products",cartItems)
            console.log(cartItems);
-          if(cartItems.length>0){
+          
             const token = localStorage.getItem("authToken"); 
             console.log("token sent for request====>",token);
             const addCartResponse = await axios.post("http://localhost:5000/addcartproducts", { cartItems }, {
@@ -27,7 +28,7 @@ const Logout = () => {
         }
        });
 
-          }
+          
 
           const response= await axios.post("http://localhost:5000/logout");
            
@@ -38,6 +39,7 @@ const Logout = () => {
              });
              localStorage.removeItem("authToken");
              localStorage.removeItem("cart");
+            
              dispatch(CLEAR_CART());
              logout();
 

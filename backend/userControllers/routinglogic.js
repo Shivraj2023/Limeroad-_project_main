@@ -324,9 +324,15 @@ const addproducts = async (req, res) => {
     try{
       const{cartItems}=req.body;
       const customerId=req.user&& req.user.id;
+    
+
+      if (!cartItems || cartItems.length === 0) {
+        await CartItem.findOneAndDelete({ customerId });
+        return res.status(200).json({ success: true, message: "Cart emptied successfully" });
+      }
           
       const formattedCartItems = cartItems.map(item => ({
-        productId: item.id, 
+        id: item.id, 
         title: item.title,
         price: Number(item.price), 
         image: item.image,
@@ -336,24 +342,14 @@ const addproducts = async (req, res) => {
       }));
 
            
-      let cart = await CartItem.findOne({customerId:customerId})
-
+      let cart = await CartItem.findOne({customerId:customerId});
+     
       if (cart) {
-          formattedCartItems.forEach((newItem) => {
-          const existingItem = cart.cartItems.find(
-            (item) => item.productId === newItem.productId && item.size === newItem.size
-          );
-  
-          if (existingItem) {
-             existingItem.quantity += newItem.quantity;
-          } else {
-             cart.cartItems.push(newItem);
-          }
-        });
+        cart.cartItems = formattedCartItems;
       } else {
-           cart = new CartItem({
+       cart = new CartItem({
           customerId,
-          cartItems:formattedCartItems
+          cartItems: formattedCartItems
         });
       }
      await cart.save();
@@ -368,9 +364,9 @@ const addproducts = async (req, res) => {
 
    const getCartItems=async(req,res)=>{
        try{
-        console.log("Request User Object:", req.user); //
+        
         const customerId=req.user&& req.user.id;
-        console.log("cutomerid------>",customerId)
+       
         const cartData = await CartItem.findOne({ customerId }) || { cartItems: [] };
          
        const cartItems = cartData && Array.isArray(cartData.cartItems) ? cartData.cartItems : [];
