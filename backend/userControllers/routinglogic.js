@@ -40,6 +40,7 @@ const register = async (req, res) => {
 };
 const login = async (req, res) => {
   const { email, password } = req.body;
+  const clientIP=req.ip;
   try {
     let user = await Customer.findOne({ email });
     if (!user) {
@@ -56,6 +57,15 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+
+      if (user.usertype==="customer"){
+            if(!user.userIP){
+              user.userIP=clientIP;
+              await user.save();
+            } else if(user.userIP!==clientIP){
+              return res.status(403).json({message:"login from another device not allowed"});
+            }
+      }
 
     const payload = {
       id: user._id,
@@ -76,7 +86,32 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.status(200).json({ message: 'Logged out successfully' });
+
+  try{
+    let userId=req.user && req.user.id;
+
+    let user = await Customer.findById(userId); 
+    if (!user) {
+      user = await Vendor.findById(userId);
+    }
+    if (!user) {
+      user = await Admin.findById(userId);
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.usertype === "customer") {
+      user.userIP = null;
+      await user.save();
+    }
+
+  res.status(200).json({ message: 'Logged out successfully' });}
+  catch(error){
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Failed to logout", error: error.message });
+  }
 };
 
 

@@ -23,6 +23,9 @@ const customerSchema=new mongoose.Schema ({
   usertype:{
     type:String,
     required:true
+  },userIP:{
+    type:String,
+    default:null
   }
 })
 

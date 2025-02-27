@@ -28,9 +28,11 @@ const Logout = () => {
         }
        });
 
-          
-
-          const response= await axios.post("http://localhost:5000/logout");
+          const response= await axios.post("http://localhost:5000/logout",{},{
+            headers:{
+              Authorization: `Bearer ${token}`,
+            }}
+          );
            
             Swal.fire({
                 icon:'info',
