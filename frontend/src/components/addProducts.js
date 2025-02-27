@@ -33,6 +33,8 @@ const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 const AddProducts = () => {
   const [brandimageFile,setBrandiamgeFile]=useState(null);
   const [productimageFile,setProductimageFile]=useState(null);
+  const [productimage2File,setProductimage2File]=useState(null);
+  const [productimage3File,setProductimage3File]=useState(null);
 
 
   const [product, setProduct] = useState({
@@ -47,10 +49,13 @@ const AddProducts = () => {
     brand_image: "",
     size: [],
     image: "",
+    image2:"",
+    image3:"",
     reviews: {
       ratings: "",
       count: ""
-    }
+    },
+    totalstock:""
   });
 
   const handleSizeChange = (size) => {
@@ -73,13 +78,13 @@ const AddProducts = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
    
-    if (name === "reviews" || name === "rating") {
+    if (name === "reviews" || name === "count") {
       setProduct(prev => ({
         ...prev,
         reviews: {
           ...prev.reviews,
           ratings: name === "reviews" ? value : prev.reviews.ratings,
-          count: name === "rating" ? value : prev.reviews.count
+          count: name === "count" ? value : prev.reviews.count
         }
       }));
     } else {
@@ -95,6 +100,12 @@ const AddProducts = () => {
     }
     const handleProductImageChange=(e)=>{
       setProductimageFile(e.target.files[0]);
+    }
+    const handleProductImage2Change=(e)=>{
+      setProductimage2File(e.target.files[0]);
+    }
+    const handleProductImage3Change=(e)=>{
+      setProductimage3File(e.target.files[0]);
     }
 
   const handleSubmit =  async(e) => {
@@ -114,12 +125,19 @@ const AddProducts = () => {
       formData.append("brand_name", product.brand_name);
      formData.append("size", JSON.stringify(product.size));
       formData.append("reviews", JSON.stringify(product.reviews));
+      formData.append("totalstock", JSON.stringify(product.totalstock));
        
       if (brandimageFile) {
         formData.append("brand_image", brandimageFile);
       }
       if (productimageFile) {
         formData.append("image", productimageFile);
+      }
+      if (productimage2File) {
+        formData.append("image2", productimage2File);
+      }
+      if (productimage3File) {
+        formData.append("image3", productimage3File);
       }
 
       const response = await axios.post("http://localhost:5000/addproducts",formData,{
@@ -150,14 +168,20 @@ const AddProducts = () => {
             brand_image: "",
             size: [],
             image: "",
+            image2:"",
+            image3:" ",
             reviews: {
               ratings: "",
               count: ""
-            }
+            },
+            totalstock:""
+
           });
 
           setBrandiamgeFile(null);
           setProductimageFile(null);
+          setProductimage2File(null);
+          setProductimage3File(null);
         }
 
      } 
@@ -328,12 +352,34 @@ const AddProducts = () => {
         </div>
 
         <div className="add-products_form-group">
-          <label htmlFor="image">Product Image File:</label>
+          <label htmlFor="image">Product Image File 1:</label>
           <input 
             type="file"
             id="image"
             name="image"
             onChange={handleProductImageChange}
+            className="add-products_input"
+            accept="image/jpeg, image/jpg, image/png"
+          />
+        </div>
+        <div className="add-products_form-group">
+          <label htmlFor="image2">Product Image File 2:</label>
+          <input 
+            type="file"
+            id="image2"
+            name="image2"
+            onChange={handleProductImage2Change}
+            className="add-products_input"
+            accept="image/jpeg, image/jpg, image/png"
+          />
+        </div>
+        <div className="add-products_form-group">
+          <label htmlFor="image3">Product Image File 3:</label>
+          <input 
+            type="file"
+            id="image3"
+            name="image3"
+            onChange={handleProductImage3Change}
             className="add-products_input"
             accept="image/jpeg, image/jpg, image/png"
           />
@@ -358,14 +404,26 @@ const AddProducts = () => {
             <input 
               type="number"
               step="0.1"
-              id="rating" 
-              name="rating"
+              id="count" 
+              name="count"
               value={product.reviews.count}
               onChange={handleChange}
               className="add-products_input"
               required
             />
           </div>
+        </div>
+        <div className="add-products_form-group">
+          <label htmlFor="Price">Total Stock:</label>
+          <input 
+            type="number" 
+            id="totalstock" 
+            name="totalstock"
+            value={product.totalstock}
+            onChange={handleChange}
+            className="add-products_input"
+            required
+          />
         </div>
 
         <div className="add-products_form-group">

@@ -17,7 +17,7 @@ router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password", resetPassword);
 
-router.post("/addproducts",verifyToken, upload.fields([{name:"brand_image",maxCount:1},{name:"image",maxCount:1}]) ,addproducts);
+router.post("/addproducts",verifyToken, upload.fields([{name:"brand_image",maxCount:1},{name:"image",maxCount:1},{name:"image2",maxCount:1},{name:"image3",maxCount:1}]) ,addproducts);
 
 router.get("/products",products);
 

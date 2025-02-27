@@ -176,6 +176,7 @@ function Productdetails() {
           alt={product.title} 
           style={{ 
             maxHeight: "550px", 
+            maxWidth:"600px",
             objectFit: "contain", 
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.9)", 
             border: "10px solid #f0f0f0"
@@ -242,8 +243,6 @@ function Productdetails() {
 </Row>
 
 
-
-
       </Col>
   
       {/* Right Column - Product Details */}
@@ -291,6 +290,9 @@ function Productdetails() {
     </p>
     <p className="fw-bold fs-4 text-danger">
       Price: ₹{product.price} <span className="fs-6">({product.offer_percent}% OFF)</span>
+    </p>
+    <p className="fw-bold fs-6 text-danger">
+      Available Stock:{product.availablestock} 
     </p>
   </div>
 

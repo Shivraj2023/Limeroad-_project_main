@@ -12,10 +12,14 @@ const productSchema = new mongoose.Schema({
   brand_image: { type: String, required: true },
   size: { type: [String], required: true },
   image: { type: String, required: true },
+  image2: { type: String, required: true },
+  image3: { type: String, required: true },
   reviews: {
     ratings: { type: String, required: true },
     count: { type: String, required: true }
   },
+  totalstock:{type:Number, set: (value) => Number(value),required:true},
+  availablestock:{type:Number,set: (value) => Number(value),required:true},
   vendorId: { 
     type: mongoose.Schema.Types.ObjectId, 
     required: true, 

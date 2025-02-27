@@ -199,6 +199,12 @@ const addproducts = async (req, res) => {
        const imagepath=req.files?.image
        ?`/uploaded_images/${req.files.image[0].filename}`
        :req.body.image;
+       const image2path=req.files?.image2
+       ?`/uploaded_images/${req.files.image[0].filename}`
+       :req.body.image2;
+       const image3path=req.files?.image3
+       ?`/uploaded_images/${req.files.image[0].filename}`
+       :req.body.image3;
 
           let parsedsize=req.body.size;
           if(typeof parsedsize==="string"){
@@ -216,8 +222,7 @@ const addproducts = async (req, res) => {
              console.error("Error parsing reviews:", error);
          }
      }
-
-   
+     
     const productData = {
       mainCategory: req.body.mainCategory,
       title: req.body.title,
@@ -230,10 +235,14 @@ const addproducts = async (req, res) => {
       brand_image: brandiamgepath,
       size: parsedsize,
       image: imagepath,
+      image2:image2path,
+      image3:image3path,
       reviews: {
         ratings:parsedReviews?.ratings,
         count:parsedReviews?.count
       },
+      totalstock:req.body.totalstock,
+      availablestock:req.body.totalstock,
       vendorId: vendor_id, 
     };
 
@@ -298,12 +307,20 @@ const addproducts = async (req, res) => {
             ? updatedImage
             : `${req.protocol}://${req.get("host")}${updatedImage}`;
         }
+
+        let updatedImage2=plainProduct.image2?
+        `${req.protocol}://${req.get("host")}${plainProduct.image2}`:null;
+        let updatedImage3=plainProduct.image3?
+        `${req.protocol}://${req.get("host")}${plainProduct.image3}`:null;
       
         return {
           ...plainProduct,
           
           ...(updatedBrandImage ? { brand_image: updatedBrandImage } : {}),
           ...(updatedImage ? { image: updatedImage } : {}),
+          ...(updatedImage2 ? { image2: updatedImage2 } : {}),
+          ...(updatedImage3? { image3: updatedImage3 } : {}),
+          
         };
       });
       
