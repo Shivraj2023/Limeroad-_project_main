@@ -62,7 +62,8 @@ const login = async (req, res) => {
             if(!user.userIP){
               user.userIP=clientIP;
               await user.save();
-            } else if(user.userIP!==clientIP){
+            } 
+            else if(user.userIP!==clientIP){
               return res.status(403).json({message:"login from another device not allowed"});
             }
       }
@@ -222,6 +223,10 @@ const addproducts = async (req, res) => {
              console.error("Error parsing reviews:", error);
          }
      }
+     const availablestock1=Number(req.body.totalstock);
+     console.log(typeof availablestock1);
+     
+     console.log(typeof req.body.totalstock);
      
     const productData = {
       mainCategory: req.body.mainCategory,
@@ -241,7 +246,7 @@ const addproducts = async (req, res) => {
         ratings:parsedReviews?.ratings,
         count:parsedReviews?.count
       },
-      totalstock:req.body.totalstock,
+      totalstock: req.body.totalstock,
       availablestock:req.body.totalstock,
       vendorId: vendor_id, 
     };

@@ -18,8 +18,8 @@ const productSchema = new mongoose.Schema({
     ratings: { type: String, required: true },
     count: { type: String, required: true }
   },
-  totalstock:{type:Number, set: (value) => Number(value),required:true},
-  availablestock:{type:Number,set: (value) => Number(value),required:true},
+  totalstock:{type:String,required:true},
+  availablestock:{type:String,required:true},
   vendorId: { 
     type: mongoose.Schema.Types.ObjectId, 
     required: true, 

@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
+import axios, { Axios } from "axios";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 
 const PaymentPage = () => {
   const [paymentMode, setPaymentMode] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  
+
+
+  const [FormData,setFormData]=useState({
+    pincode:"",
+    mobileNumber:"",
+    fullName:"",
+    locality:"",
+    houseNumber:"",
+    landmark:"",
+    city:"",
+    state:"",
+    addressType:"home"
+
+  })
   
   
   const cartItems = useSelector((state) => state.cart.items);
+
+  console.log("cartitems=======",cartItems);
    
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -15,6 +37,81 @@ const PaymentPage = () => {
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  const validateForm = () => {
+    let newErrors = {};
+    
+    if (!FormData.pincode.match(/^\d{6}$/)) {
+      newErrors.pincode = "Pincode must be 6 digits";
+    }
+    if (!FormData.mobileNumber.match(/^\d{10}$/)) {
+      newErrors.mobileNumber = "Mobile number must be 10 digits";
+    }
+    if (!FormData.fullName.trim()) {
+      newErrors.fullName = "Full name is required";
+    }
+    if (!FormData.locality.trim()) {
+      newErrors.locality = "Locality is required";
+    }
+    if (!FormData.houseNumber.trim()) {
+      newErrors.houseNumber = "House number is required";
+    }
+    if (!FormData.city.trim()) {
+      newErrors.city = "City is required";
+    }
+    if (!FormData.state.trim()) {
+      newErrors.state = "State is required";
+    }
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange=(e)=>{
+    const{name,value}=e.target;
+    setFormData( (prev)=>({...prev, [name]:value}));
+  }
+
+  const handleCheckout = async (e) => {
+    e.preventDefault();
+
+    const stripePromise = await loadStripe("pk_test_51QxNehQ0kxVljOm8JKCbrHaYbCIVRk7WbF0R6vjGF8V9Twicd7rJIq9ABoroHmeVlQWpuAs5OtAokeCipvH96ITB00AUdYGAvl");
+
+    if (!validateForm()) return;
+
+    const body = {
+        cart: cartItems,
+        address: FormData,
+        price: totalPrice,
+    };
+       const token=localStorage.getItem("authToken");
+       console.log("authToken");
+    try {
+        const response = await axios.post("http://localhost:5000/payment", body, {
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+        },
+        });
+       
+        const session = response.data; 
+
+       
+        const result = await stripePromise.redirectToCheckout({
+            sessionId: session.id,  
+        });
+
+        if (result.error) {
+            console.error("Stripe Checkout Error:", result.error.message);
+        }
+
+    } catch (error) {
+        console.error("Payment Failed:", error.response ? error.response.data : error.message);
+    }
+};
+
+
+
 
   return (
     <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', color: '#000' }}>
@@ -42,46 +139,56 @@ const PaymentPage = () => {
               {/* Address Form Fields */}
               <div className="form-group">
                 <label>Pincode *</label>
-                <input type="text" className="form-control" placeholder="6 Digit Pincode" />
+                <input type="text" name="pincode" value={FormData.pincode} onChange={handleChange} placeholder="6 Digit Pincode" className="form-control" />
+                {errors.pincode && <small className="text-danger">{errors.pincode}</small>}
               </div>
               <div className="form-group">
                 <label>Mobile Number *</label>
-                <input type="text" className="form-control" value="phone" readOnly />
+                <input type="text" name="mobileNumber" value={FormData.mobileNumber} onChange={handleChange}  className="form-control"  />
+                {errors.mobileNumber && <small className="text-danger">{errors.mobileNumber}</small>}
               </div>
               <div className="form-group">
                 <label>Full Name *</label>
-                <input type="text" className="form-control" />
+                <input type="text" name="fullName" value={FormData.fullName} onChange={handleChange} className="form-control" />
+                {errors.fullName && <small className="text-danger">{errors.fullName}</small>}
               </div>
               <div className="form-group">
                 <label>Locality/Area *</label>
-                <input type="text" className="form-control" />
+                <input type="text" name="locality" value={FormData.locality} onChange={handleChange} className="form-control" />
+                {errors.locality && <small className="text-danger">{errors.locality}</small>}
+                
               </div>
               <div className="form-group">
                 <label>Flat / House No. / Building Name *</label>
-                <input type="text" className="form-control" />
+                <input type="text" name="houseNumber" value={FormData.houseNumber} onChange={handleChange} className="form-control" />
+                {errors.houseNumber && <small className="text-danger">{errors.houseNumber}</small>}
               </div>
               <div className="form-group">
                 <label>Building/Street/Landmark *</label>
-                <input type="text" className="form-control" />
+                <input type="text" name="landmark" value={FormData.landmark} onChange={handleChange} className="form-control" />
+                {errors.landmark && <small className="text-danger">{errors.landmark}</small>}
               </div>
               <div className="d-flex justify-content-between">
                 <div className="form-group">
                   <label>City *</label>
-                  <input type="text" className="form-control" />
+                  <input type="text" name="city" value={FormData.city} onChange={handleChange}  className="form-control" />
+                  {errors.city && <small className="text-danger">{errors.city}</small>}
                 </div>
                 <div className="form-group">
                   <label>State *</label>
-                  <input type="text" className="form-control" />
+                  <input type="text" name="state" value={FormData.state} onChange={handleChange}  className="form-control" />
+                  {errors.state && <small className="text-danger">{errors.state}</small>}
                 </div>
               </div>
               <div className="mt-2">
                 <span>Address Type</span>
                 <div className="form-check form-check-inline">
-                  <input className="form-check-input" type="radio" name="addressType" value="Home" />
+                  <input className="form-check-input" type="radio" name="addressType"  value="Home" checked={FormData.addressType === "Home"} onChange={handleChange} />
                   <label className="form-check-label">Home</label>
+                   
                 </div>
                 <div className="form-check form-check-inline">
-                  <input className="form-check-input" type="radio" name="addressType" value="Office" />
+                  <input className="form-check-input" type="radio" name="addressType" value="Office" checked={FormData.addressType === "Office"} onChange={handleChange} />
                   <label className="form-check-label">Office</label>
                 </div>
               </div>
@@ -187,7 +294,7 @@ const PaymentPage = () => {
             <div className="mt-3 bg-light p-2 text-danger text-center">
               <h6>Amount Payable: ₹{totalPrice}</h6>
             </div>
-            <button className="btn btn-success w-100 mt-2">Confirm Order</button>
+            <button className="btn btn-success w-100 mt-2" onClick={handleCheckout}>Confirm Order</button>
           </>
         )}
             </div>

@@ -15,6 +15,8 @@ import { Outlet,useLocation } from 'react-router-dom';
 import Resetpassword from './resetpassword';
 import AddProducts from './addProducts';
 import VendorProducts from './vendorProducts';
+import Failure from './failure';
+import Succes from './success'
 
 
 
@@ -53,6 +55,8 @@ function Router() {
           <Route path='/payment' element={<Payment/>}/>
           <Route path='/addproducts' element={<AddProducts/>}/>
           <Route path='/vendor-products'  element={<VendorProducts/>}/>
+          <Route path='/success'  element={<Succes/>}/>
+          <Route path='/failure'  element={<Failure/>}/>
         </Routes>
       
     </BrowserRouter>
