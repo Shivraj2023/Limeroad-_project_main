@@ -16,7 +16,7 @@ import Resetpassword from './resetpassword';
 import AddProducts from './addProducts';
 import VendorProducts from './vendorProducts';
 import Failure from './failure';
-import Succes from './success'
+import SuccessPage from './success'
 
 
 
@@ -55,7 +55,7 @@ function Router() {
           <Route path='/payment' element={<Payment/>}/>
           <Route path='/addproducts' element={<AddProducts/>}/>
           <Route path='/vendor-products'  element={<VendorProducts/>}/>
-          <Route path='/success'  element={<Succes/>}/>
+          <Route path='/success'  element={<SuccessPage/>}/>
           <Route path='/failure'  element={<Failure/>}/>
         </Routes>
       

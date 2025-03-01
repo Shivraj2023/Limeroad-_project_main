@@ -223,10 +223,14 @@ const addproducts = async (req, res) => {
              console.error("Error parsing reviews:", error);
          }
      }
-     const availablestock1=Number(req.body.totalstock);
-     console.log(typeof availablestock1);
+
+     const totalStockRaw = req.body.totalstock;
+     const cleanedStock = totalStockRaw?.trim(); 
+     const availablestock = cleanedStock && !isNaN(cleanedStock) ? Number(cleanedStock) : null;
+      /* const availablestock=Number(req.body.totalstock); */
+     /*  console.log("Final availablestock:", availablestock);  */
      
-     console.log(typeof req.body.totalstock);
+     
      
     const productData = {
       mainCategory: req.body.mainCategory,
@@ -246,8 +250,9 @@ const addproducts = async (req, res) => {
         ratings:parsedReviews?.ratings,
         count:parsedReviews?.count
       },
-      totalstock: req.body.totalstock,
-      availablestock:req.body.totalstock,
+      totalstock:availablestock,
+      orderedStock:'',
+      availablestock:'',
       vendorId: vendor_id, 
     };
 

@@ -3,14 +3,15 @@ require("dotenv").config();
 const stripe=require("stripe")(process.env.STRIPE_SCERET_KEY);
 
 const Customer= require("../models/customer");
+const Order=require('../models/orders');
+const Product = require('../models/products');
+const CartItem=require('../models/cartitem')
 
 const payment= async (req, res) => {
     try {
         const userId=req.user&&req.user.id;
         const { cart,address} = req.body; 
-        console.log("userid=====",userId);
-        console.log("userid=====",address);
-
+       
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized user" });
         }
@@ -46,4 +47,63 @@ const payment= async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
-module.exports=payment;
+
+const process_payment = async (req, res) => {
+    try {
+
+        const customerId = req.user?.id;
+        let { cart,sessionId } = req.body;
+          cart=JSON.parse(cart);
+        console.log("cartitems-----",cart);
+        console.log("Processing order for user:", customerId);
+
+        console.log("Received cart:", cart, "Type:", typeof cart);
+
+
+        
+        const user = await Customer.findById(customerId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        
+        const newOrder = new Order({
+            customerId,
+            items: cart.map(item => ({
+                productId: item.id, 
+                title: item.title,
+                quantity: item.quantity,
+            })),
+            total: cart.reduce((acc, item) => acc + item.price * item.quantity, 0), 
+            status: 'Paid'
+        });
+        
+        await newOrder.save();
+
+        // Clear cart
+        await CartItem.findOneAndDelete({ customerId });
+        
+        for (let item of cart) {
+            const product = await Product.findById(item.id); 
+        
+            if (product) {
+                const orderedStock = (parseInt(product.orderedStock) || 0) + item.quantity;
+                const availableStock = (parseInt(product.totalstock) || 0) - orderedStock;
+        
+                await Product.findByIdAndUpdate(item._id, { 
+                    orderedStock: orderedStock.toString(),
+                    availablestock: availableStock.toString(),
+                });
+            }
+        }
+        
+        console.log("Order stored, cart cleared, stock updated.");
+        res.status(200).json({ success: true });
+
+    } catch (error) {
+        console.error("Error processing order:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+module.exports={payment,process_payment};

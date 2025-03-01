@@ -55,7 +55,7 @@ const AddProducts = () => {
       ratings: "",
       count: ""
     },
-    totalstock:""
+    totalstock:0,
   });
 
   const handleSizeChange = (size) => {
@@ -152,8 +152,7 @@ const AddProducts = () => {
                      title: 'Success!',
                     text: response.data.message||'You added product  successfully.',
                    });
-         
-          
+                   
           console.log('result=======>',response.data)
           console.log(response.data.message);
           setProduct({
