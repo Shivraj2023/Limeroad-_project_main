@@ -125,7 +125,7 @@ const AddProducts = () => {
       formData.append("brand_name", product.brand_name);
      formData.append("size", JSON.stringify(product.size));
       formData.append("reviews", JSON.stringify(product.reviews));
-      formData.append("totalstock", JSON.stringify(product.totalstock));
+      formData.append("totalstock", product.totalstock);
        
       if (brandimageFile) {
         formData.append("brand_image", brandimageFile);

@@ -1,4 +1,5 @@
 const express=require("express");
+const mongoose=require("mongoose");
 require("dotenv").config();
 const stripe=require("stripe")(process.env.STRIPE_SCERET_KEY);
 
@@ -11,13 +12,25 @@ const payment= async (req, res) => {
     try {
         const userId=req.user&&req.user.id;
         const { cart,address} = req.body; 
+
+        console.log("address",address);
        
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized user" });
         }
-        const updatedUser = await Customer.findByIdAndUpdate(userId, { $set: { address } }, { new: true, runValidators: true });
-
-        console.log("Updated User:", updatedUser);
+        
+        const user = await Customer.findOne({ _id: new mongoose.Types.ObjectId(userId) });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        if (user.usertype !== "customer") {
+            return res.status(403).json({ error: "Only buyers are allowed" });
+        }
+        user.address = address; 
+        user.markModified("address"); 
+        await user.save();
+        
+       console.log("Updated User:", user);
         
 
         const lineItems = cart.map(item => ({
@@ -54,13 +67,7 @@ const process_payment = async (req, res) => {
         const customerId = req.user?.id;
         let { cart,sessionId } = req.body;
           cart=JSON.parse(cart);
-        console.log("cartitems-----",cart);
-        console.log("Processing order for user:", customerId);
-
-        console.log("Received cart:", cart, "Type:", typeof cart);
-
-
-        
+               
         const user = await Customer.findById(customerId);
         if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -77,23 +84,23 @@ const process_payment = async (req, res) => {
         });
         
         await newOrder.save();
-
-        // Clear cart
+      
         await CartItem.findOneAndDelete({ customerId });
         
         for (let item of cart) {
             const product = await Product.findById(item.id); 
-        
+            
             if (product) {
                 const orderedStock = (parseInt(product.orderedStock) || 0) + item.quantity;
                 const availableStock = (parseInt(product.totalstock) || 0) - orderedStock;
         
-                await Product.findByIdAndUpdate(item._id, { 
-                    orderedStock: orderedStock.toString(),
-                    availablestock: availableStock.toString(),
-                });
+                await Product.findByIdAndUpdate(item.id, { 
+                    orderedStock: orderedStock, 
+                    availablestock: availableStock, 
+                }, { new: true }); 
             }
         }
+        
         
         console.log("Order stored, cart cleared, stock updated.");
         res.status(200).json({ success: true });
@@ -103,7 +110,5 @@ const process_payment = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
-
 
 module.exports={payment,process_payment};

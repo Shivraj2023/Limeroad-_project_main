@@ -225,11 +225,14 @@ const addproducts = async (req, res) => {
      }
 
      const totalStockRaw = req.body.totalstock;
-     const cleanedStock = totalStockRaw?.trim(); 
-     const availablestock = cleanedStock && !isNaN(cleanedStock) ? Number(cleanedStock) : null;
-      /* const availablestock=Number(req.body.totalstock); */
-     /*  console.log("Final availablestock:", availablestock);  */
+
+    
+     const cleanedStock = totalStockRaw?.toString().trim(); 
+     const availablestock = cleanedStock && !isNaN(cleanedStock) 
+         ? Number(cleanedStock) 
+         : null;
      
+     console.log("Final Converted Stock:", availablestock);
      
      
     const productData = {

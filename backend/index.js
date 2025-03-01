@@ -1,6 +1,9 @@
 const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
 const cookieParser=require("cookie-parser");
+
+
  
 
 
@@ -11,7 +14,7 @@ app.use(cookieParser());
 
 const useRoutes=require("./router");
 const connect_mongo_db=require("./config/db")
-require("dotenv").config();
+
 
 
 const port=process.env.PORT||5000;
@@ -25,6 +28,7 @@ app.use(cors({
   }));
   
 app.use(express.json()); 
+app.use(express.urlencoded({extended:true}));
 
 
 app.use('/uploaded_images',express.static("uploaded_images"));
