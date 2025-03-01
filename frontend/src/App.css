@@ -37,3 +37,29 @@
   }
 }
  */
+
+ body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Make sure the app fills the viewport */
+}
+
+.main-content {
+  flex: 1; /* Pushes the footer down */
+}
+
+footer {
+  position: relative; 
+  z-index: 1;
+  width: 100%;
+  background-color: #343a40; 
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}

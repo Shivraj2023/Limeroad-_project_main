@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./brandproduct.css"; // Custom styles
+import "./brandproduct.css";
 
 const BrandProduct = () => {
-  const { category, brandid } = useParams(); // Correct parameter name
+  const { category, brandid } = useParams(); 
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
 
@@ -86,34 +86,34 @@ const BrandProduct = () => {
   }, [category, brandid]); */
 
   return (
-    <div className="container mt-4">
-      <h2 className="fw-bold">Fresh & Fabulous!</h2>
-      <div className="row">
-        {similarProducts.map((product, index) => (
-          <div key={product.id} className="col-md-3">
-            <Link to={`/products/${category}/${product._id}`} className="text-decoration-none">
-              <div className="card product-card">
-                <span className="badge badge-number">{index + 1}</span>
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="card-img-top product-image"
-                />
-                <div className="card-body">
-                  <p className="product-title">{product.title}</p>
-                  <p className="brand-name">By {product.brand}</p>
-                  <div className="price-details">
-                    <span className="discounted-price">₹{product.price}</span>
-                    <span className="original-price">₹{product.original_price}</span>
-                    <span className="discount">{product.offer_percent}% off</span>
-                  </div>
-                </div>
+    <div className="container mt-4 brand-product-page">
+  <h2 className="fw-bold">Fresh & Fabulous!</h2>
+  <div className="row justify-content-center">
+    {similarProducts.map((product, index) => (
+      <div key={product.id} className="col-6 col-sm-6 col-md-4 col-lg-3"> 
+        <Link to={`/products/${category}/${product._id}`} className="text-decoration-none">
+          <div className="card product-card">
+            <span className="badge badge-number">{index + 1}</span>
+            <img
+              src={product.image}
+              alt={product.title}
+              className="card-img-top product-image"
+            />
+            <div className="card-body">
+              <p className="product-title">{product.title}</p>
+              <p className="brand-name">By {product.brand}</p>
+              <div className="price-details">
+                <span className="discounted-price">₹{product.price}</span>
+                <span className="original-price">₹{product.original_price}</span>
+                <span className="discount">{product.offer_percent}% off</span>
               </div>
-            </Link>
+            </div>
           </div>
-        ))}
+        </Link>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
   );
 };
 

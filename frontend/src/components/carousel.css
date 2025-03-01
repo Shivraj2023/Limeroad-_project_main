@@ -18,3 +18,12 @@
   width: 20px;
   height: 20px;
 }
+
+@media (max-width: 768px) {
+  .d-flex {
+    width: 90% !important; 
+    margin-left: auto !important; 
+    margin-right: auto !important;
+  }
+}
+

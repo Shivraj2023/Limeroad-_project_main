@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
  import { authContext } from './contextlogin'; 
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, increaseQuantity, decreaseQuantity } from './cartslice';
+import './cartproduct.css';
 
 function Cartproducts() {
   const naviagate=useNavigate()
@@ -32,6 +33,7 @@ function Cartproducts() {
   }, [cartItems]);
 
   return (
+    <div className="cart-page">
     <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', color: '#000' }}>
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white" style={{ height: '60px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
@@ -127,6 +129,7 @@ function Cartproducts() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

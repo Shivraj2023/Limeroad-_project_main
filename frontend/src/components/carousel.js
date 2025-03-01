@@ -15,7 +15,7 @@ const Carouselfeed = () => {
   return (
     <div
       className='d-flex align-items-center justify-content-center'
-      style={{ width: '63%', marginLeft: '280px', gap: '2px' }}
+      style={{ width: '63%',margin:"auto", gap: '2px' }}
     >
       {/* Carousel 1 */}
       <div id='carousel1' className='carousel slide' style={{ width: '50%' }}>
