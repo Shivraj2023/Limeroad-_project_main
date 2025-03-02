@@ -48,46 +48,7 @@ const ProductPage = ( {products}) => {
       },[category, subcategory, products])
 
 
-  
-   /* useEffect(() => {
-      if (category) {
-      
-      let categoryKey = "";
-      if (category === "men" || category === "women") {
-        categoryKey = `${category.toLowerCase()}s_products`;
-      } else if (category === "kids" || category === "home") {
-        categoryKey = `${category.toLowerCase()}_products`; 
-      }
-  
-      if (categoryKey && products[categoryKey]) {
-        const categoryList = [...new Set(products[categoryKey].map((product) => product.category))];
-        setCategories(categoryList); 
-             }
-        
-      if (subcategory) {
-           const filtered = products[categoryKey]?.filter(
-          (product) =>
-            product.category.toLowerCase() === subcategory.toLowerCase() 
-           ) 
-
-        setFilteredProducts(filtered);
-        setBaseFilteredProducts(filtered)
-      } else {
-       
-        const filtered = products[categoryKey]
-               
-        setFilteredProducts(filtered);
-        setBaseFilteredProducts(filtered)
-      }
-    } else {
-      setBaseFilteredProducts([]);
-      setFilteredProducts([]);
-      setCategories([]);
-    }
-  }, [category, subcategory, products]); */
-
-
-  const handleFilterChange = (e) => {
+    const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
@@ -154,7 +115,7 @@ const ProductPage = ( {products}) => {
                   <div className="card new-card">
                   <Link to={`/products/${category}/${product._id}`}>
   <img key={product.image} src={product.image} className="card-img-top" alt={product.name} />
-</Link>
+                 </Link>
 
                     <div className="card-body">
                       <p className="card-text">

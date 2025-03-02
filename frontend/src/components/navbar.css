@@ -238,8 +238,8 @@
 
 .page-container .profile-dropdown {
   position: absolute;
-  top: 50px;
-  right: 0;
+  top: 60px;
+  right: -60px;
   width: 200px;
   background-color: white;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -260,6 +260,7 @@
 .page-container .profile-text {
   font-size: 12px;
   color: gray;
+  margin: auto;
 }
 
 .page-container .profile-login-btn {
@@ -269,6 +270,7 @@
   border: none;
   padding: 5px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .page-container .profile-divider {

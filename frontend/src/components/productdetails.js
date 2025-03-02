@@ -82,40 +82,6 @@ function Productdetails() {
    },[category, _id]);
 
 
-
-/* 
-  useEffect(() => {
-    fetch("/assets/assets.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const categoryMap = {
-          men: data.mens_products || [],
-          women: data.womens_products || [],
-          kids: data.kids_products || [],
-          home: data.home_products || [],
-        };
-
-        const selectedCategory = categoryMap[category];
-
-        if (selectedCategory) {
-          const foundProduct = selectedCategory.find((p) => p.id === parseInt(id));
-          setProduct(foundProduct);
-
-          if (foundProduct) {
-            const filteredProducts = selectedCategory.filter(
-              (p) => p.category === foundProduct.category && p.id !== foundProduct.id
-            );
-            setSimilarProducts(filteredProducts);
-          }
-        } else {
-          console.error(`Category "${category}" not found`);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching product details:", error);
-      });
-  }, [category, id]); */
-
   const handlesize=(size)=>{
     setSelectedSize(size); 
   }
@@ -241,7 +207,6 @@ function Productdetails() {
     <p className="text-center">No similar products found.</p>
   )}
 </Row>
-
 
       </Col>
   

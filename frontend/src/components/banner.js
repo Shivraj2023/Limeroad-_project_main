@@ -2,8 +2,6 @@ import React, { useState,useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
-
 import './banner.css';
 
 function Banner() {
@@ -48,41 +46,7 @@ function Banner() {
      }
      Fetchdata();
    },[]);
-
  
- /*  useEffect(() => {
-    fetch("/assets/assets.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const categoryMap = {
-          men: new Set(),
-          women: new Set(),
-          kids: new Set(),
-          home: new Set(),
-        };
-
-        if (data.mens_products) {
-          data.mens_products.forEach((item) => categoryMap.men.add(item));
-        }
-        if (data.womens_products) {
-          data.womens_products.forEach((item) => categoryMap.women.add(item));
-        }
-        if (data.kids_products) {
-          data.kids_products.forEach((item) => categoryMap.kids.add(item));
-        }
-        if (data.home_products) {
-          data.home_products.forEach((item) => categoryMap.home.add(item));
-        }
-
-        setCategories({
-          men: Array.from(categoryMap.men),
-          women: Array.from(categoryMap.women),
-          kids: Array.from(categoryMap.kids),
-          home: Array.from(categoryMap.home),
-        });
-        
-      });
-  }, []); */
   
   useEffect(() => {
     const main = searchParams.get('main') || 'men';

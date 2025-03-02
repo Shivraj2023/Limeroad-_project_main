@@ -45,21 +45,8 @@ const Products = () => {
      Fetchdata();
    },[]);
  
-  /* useEffect(() => {
-    fetch("/assets/assets.json") 
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to load product data.");
-        return response.json();
-      })
-      .then((data) => {
-        
-        console.log(data);
-        setProducts(data);
-      })
-      .catch((error) => console.error("Error fetching products:", error));
-  }, []); */
-
-  return (
+  
+   return (
     <div className="products-container">
        {Object.keys(products).length > 0 ?  (
         

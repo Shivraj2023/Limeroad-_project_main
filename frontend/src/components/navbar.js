@@ -10,6 +10,10 @@ import "./navbar.css";
 function Navbar() {
   const useauthContext=useContext(authContext);
   const {isloggedin}=useauthContext;
+
+  const [activeDropdown, SetActiveDropdown] = useState(null);
+  const [search, SetSearch] = useState(false);
+  const [showProfileDropdown, SetShowProfileDropdown] = useState(false);
   
 
   const cartItems = useSelector((state) => state.cart.items);
@@ -24,9 +28,7 @@ function Navbar() {
     home: [],
   });
 
-  const [activeDropdown, SetActiveDropdown] = useState(null);
-  const [search, SetSearch] = useState(false);
-  const [showProfileDropdown, SetShowProfileDropdown] = useState(false);
+  
 
       useEffect(()=>{
        const Fetchdata=async()=>{
@@ -47,8 +49,7 @@ function Navbar() {
             categoryMap[item.mainCategory].add(item.category)
           }
          });
-             
-              
+                           
           SetCategory({
             men:Array.from(categoryMap.men),
             women:Array.from(categoryMap.women),
@@ -68,60 +69,10 @@ function Navbar() {
             });
           }
         }
-
         Fetchdata();
       },[]);
 
-  /* useEffect(() => {
-    fetch("/asSets/asSets.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const categoryMap = {
-          men: new Set(),
-          women: new Set(),
-          kids: new Set(),
-          home: new Set(),
-        };
-
-        if (data.mens_products) {
-          data.mens_products.forEach((item) =>
-            categoryMap.men.add(item.category)
-          );
-        }
-        if (data.womens_products) {
-          data.womens_products.forEach((item) =>
-            categoryMap.women.add(item.category)
-          );
-        }
-        if (data.kids_products) {
-          data.kids_products.forEach((item) =>
-            categoryMap.kids.add(item.category)
-          );
-        }
-        if (data.home_products) {
-          data.home_products.forEach((item) =>
-            categoryMap.home.add(item.category)
-          );
-        }
-
-        SetCategory({
-          men: Array.from(categoryMap.men),
-          women: Array.from(categoryMap.women),
-          kids: Array.from(categoryMap.kids),
-          home: Array.from(categoryMap.home),
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-        SetCategory({
-          men: [],
-          women: [],
-          kids: [],
-          home: [],
-        });
-      });
-  }, []); */
-
+  
   return (
     <div className="page-container">
     <nav
@@ -149,7 +100,7 @@ function Navbar() {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          style={{ border: "none", outline: "none", fontSize: "1.5rem", marginLeft: "20px" }}
+          style={{ border: "none", outline: "none", fontSize: "1.5rem", marginLeft: "20px"}}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
