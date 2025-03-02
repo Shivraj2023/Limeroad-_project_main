@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 const SuccessPage = () => {
     const [searchParams] = useSearchParams();
     const sessionId = searchParams.get("session_id");
-
+    const [hasProcessed, setHasProcessed] = useState(false);
  
      const cart=localStorage.getItem("cart");
      console.log("cart======",cart);
@@ -27,30 +27,17 @@ const SuccessPage = () => {
           );
           console.log("Successfully processed", paymentResponse.data);
           localStorage.removeItem("cart");
+          setHasProcessed(true);
         } catch (error) {
           console.log("Error during fetching:", error);
         }
       };
     
-      if (sessionId) {
+      if (sessionId && !hasProcessed) {
         processPayment();
-      }
-    }, []);
-    
-
-
-    /* useEffect(() => {
-        if (sessionId) {
-            fetch("http://localhost:5000/process-payment", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sessionId })
-            })
-            .then(res => res.json())
-            .then(data => console.log("Order processed:", data))
-            .catch(error => console.error("Error processing order:", error));
-        }
-    }, [sessionId]); */
+    }
+    }, [sessionId,hasProcessed]);
+       
 
     return <h1>Payment Successful! Order is being processed...</h1>;
 };
