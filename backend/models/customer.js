@@ -26,6 +26,17 @@ const customerSchema=new mongoose.Schema ({
   },userIP:{
     type:String,
     default:null
+  },
+  address: {
+    pincode: { type: String, default: "", trim: true },
+    mobileNumber: { type: String, default: "", trim: true },
+    fullName: { type: String, default: "", trim: true },
+    locality: { type: String, default: "", trim: true },
+    houseNumber: { type: String, default: "", trim: true },
+    landmark: { type: String, default: "", trim: true },
+    city: { type: String, default: "", trim: true },
+    state: { type: String, default: "", trim: true },
+    addressType: { type: String, default: "home", enum: ["home", "office"] }
   }
 })
 

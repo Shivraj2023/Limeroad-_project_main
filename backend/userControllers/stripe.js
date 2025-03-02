@@ -13,7 +13,7 @@ const payment= async (req, res) => {
         const userId=req.user&&req.user.id;
         const { cart,address} = req.body; 
 
-        console.log("address",address);
+        console.log("address=======>",address);
        
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized user" });
@@ -26,12 +26,30 @@ const payment= async (req, res) => {
         if (user.usertype !== "customer") {
             return res.status(403).json({ error: "Only buyers are allowed" });
         }
-        user.address = address; 
-        user.markModified("address"); 
+        user.address = { 
+            pincode: address.pincode || "",
+            mobileNumber: address.mobileNumber || "",
+            fullName: address.fullName || "",
+            locality: address.locality || "",
+            houseNumber: address.houseNumber || "",
+            landmark: address.landmark || "",
+            city: address.city || "",
+            state: address.state || "",
+            addressType: (address.addressType || "home").toLowerCase()
+        };
+
+        console.log(address.pincode);
+        console.log(address.mobileNumber);
+        console.log(address.fullName);
+        console.log(address.locality);
+        console.log(address.landmark );
+        console.log( address.state);
+        console.log(address.addressType );
+
+        user.markModified("address");
         await user.save();
-        
-       console.log("Updated User:", user);
-        
+
+        console.log("Updated User After Save:", user);
 
         const lineItems = cart.map(item => ({
             price_data: {

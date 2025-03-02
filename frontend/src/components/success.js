@@ -35,7 +35,7 @@ const SuccessPage = () => {
       if (sessionId) {
         processPayment();
       }
-    }, [sessionId]);
+    }, []);
     
 
 
