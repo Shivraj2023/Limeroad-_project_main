@@ -98,6 +98,7 @@
     background: white;
     box-shadow: none;
      z-index: 1100;
+     margin-top: 60px;
   }
   .page-container .navbar-nav {
     flex-direction: column;

@@ -100,7 +100,7 @@ function Navbar() {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          style={{ border: "none", outline: "none", fontSize: "1.5rem", marginLeft: "20px"}}
+          style={{ border: "none", outline: "none", fontSize: "1.5rem", paddingLeft: "15px"}}
         >
           <span className="navbar-toggler-icon"></span>
         </button>

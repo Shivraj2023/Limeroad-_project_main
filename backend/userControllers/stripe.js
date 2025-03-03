@@ -38,18 +38,8 @@ const payment= async (req, res) => {
             addressType: (address.addressType || "home").toLowerCase()
         };
 
-        console.log(address.pincode);
-        console.log(address.mobileNumber);
-        console.log(address.fullName);
-        console.log(address.locality);
-        console.log(address.landmark );
-        console.log( address.state);
-        console.log(address.addressType );
-
         user.markModified("address");
         await user.save();
-
-        console.log("Updated User After Save:", user);
 
         const lineItems = cart.map(item => ({
             price_data: {
@@ -127,6 +117,7 @@ const process_payment = async (req, res) => {
         console.error("Error processing order:", error);
         res.status(500).json({ error: error.message });
     }
+    
 };
 
 module.exports={payment,process_payment};
