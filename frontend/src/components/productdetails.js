@@ -52,13 +52,14 @@ function Productdetails() {
 
        const selectedCategory = categoryMap[category.toLowerCase()];
 
-       console.log("slectedcategeory=======>>>>>",selectedCategory);
+       
 
        if (selectedCategory) {
         const foundProduct = selectedCategory.find((p) => p._id === _id);
        
-        console.log("id---------",_id);
+        
         setProduct(foundProduct);
+        
         
 
         if (foundProduct) {
@@ -256,7 +257,7 @@ function Productdetails() {
     <p className="fw-bold fs-4 text-danger">
       Price: ₹{product.price} <span className="fs-6">({product.offer_percent}% OFF)</span>
     </p>
-   
+     
   </div>
 
   {/* Add to Cart Button */}
