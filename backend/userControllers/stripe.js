@@ -57,7 +57,7 @@ const payment= async (req, res) => {
             payment_method_types: ['card'],
             line_items: lineItems, 
             mode: 'payment',
-            success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `http://localhost:3000/success`,
             cancel_url: 'http://localhost:3000/failure',
             metadata: { userId } 
         });
@@ -71,10 +71,11 @@ const payment= async (req, res) => {
 
 const process_payment = async (req, res) => {
     try {
+        console.log("Received API request:", req.body);
 
         const customerId = req.user?.id;
-        let { cart,sessionId } = req.body;
-          cart=JSON.parse(cart);
+        let { cart } = req.body;
+          
                
         const user = await Customer.findById(customerId);
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -111,7 +112,7 @@ const process_payment = async (req, res) => {
         
         
         console.log("Order stored, cart cleared, stock updated.");
-        res.status(200).json({ success: true });
+        res.status(200).json({ message: "cart upadted sucessfylly" });
 
     } catch (error) {
         console.error("Error processing order:", error);

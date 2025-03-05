@@ -256,13 +256,18 @@ function Productdetails() {
     <p className="fw-bold fs-4 text-danger">
       Price: ₹{product.price} <span className="fs-6">({product.offer_percent}% OFF)</span>
     </p>
-    <p className="fw-bold fs-6 text-danger">
-      Available Stock:{product.availablestock} 
-    </p>
+   
   </div>
 
   {/* Add to Cart Button */}
-  <Button variant="success" className="w-100 mt-4" onClick={handletocart}>ADD TO CART</Button>
+  {product.availablestock>0?(<Button variant="success" className="w-100 mt-4" onClick={handletocart}>ADD TO CART</Button>):(<Button 
+    variant="danger" 
+    className="w-100 mt-4" 
+    disabled
+  >
+    OUT OF STOCK
+  </Button>)}
+  
 
   {/* Size Chart Section */}
   <div id="size-chart" className="mt-5">

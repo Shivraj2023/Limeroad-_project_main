@@ -3,6 +3,9 @@
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+.d-block{
+  width: 80%;
+}
 
 .carousel-control-prev,
 .carousel-control-next {
@@ -21,9 +24,13 @@
 
 @media (max-width: 768px) {
   .d-flex {
-    width: 90% !important; 
+    width: 100% !important; 
     margin-left: auto !important; 
     margin-right: auto !important;
+  }
+  #carousel1 .carousel-item img{
+    width:50% !important; 
+    max-width: none; 
   }
 }
 

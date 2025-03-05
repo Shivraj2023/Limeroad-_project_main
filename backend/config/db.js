@@ -4,7 +4,7 @@ const mongoose=require("mongoose");
 const env=require("dotenv")
 env.config()
 
-// connecting to the mogo db here using url from the env file 
+// connecting to the mongo db here using url from the env file 
 
 
 let connect_mongo_db =  async ()=>{

@@ -50,40 +50,7 @@ const BrandProduct = () => {
      }
      Fetchdata();
    },[category, brandid]);
-   
-
- /*  useEffect(() => {
-    fetch("/assets/assets.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const categoryMap = {
-          men: data.mens_products || [],
-          women: data.womens_products || [],
-          kids: data.kids_products || [],
-          home: data.home_products || [],
-        };
-
-        const selectedCategory = categoryMap[category] || [];
-        const foundProduct = selectedCategory.find((p) => p.id === parseInt(brandid));
-
-        setProduct(foundProduct);
-
-        if (foundProduct) {
-          const filteredProducts = selectedCategory.filter(
-            (p) => p.category === foundProduct.category
-          );
-          setSimilarProducts(filteredProducts) */
-
-          // Ensure the found product is included if the filtered list is valid
-          /* if (filteredProducts.length > 0) {
-            setSimilarProducts([...filteredProducts, foundProduct]);
-          } else {
-            setSimilarProducts([foundProduct]);
-          } */
-        /* }
-      })
-      .catch((error) => console.error("Error fetching product details:", error));
-  }, [category, brandid]); */
+ 
 
   return (
     <div className="container mt-4 brand-product-page">

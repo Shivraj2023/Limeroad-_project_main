@@ -57,6 +57,7 @@ function Router() {
           <Route path='/vendor-products'  element={<VendorProducts/>}/>
           <Route path='/success'  element={<SuccessPage/>}/>
           <Route path='/failure'  element={<Failure/>}/>
+          
         </Routes>
       
     </BrowserRouter>
