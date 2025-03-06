@@ -201,10 +201,10 @@ const addproducts = async (req, res) => {
        ?`/uploaded_images/${req.files.image[0].filename}`
        :req.body.image;
        const image2path=req.files?.image2
-       ?`/uploaded_images/${req.files.image[0].filename}`
+       ?`/uploaded_images/${req.files.image2[0].filename}`
        :req.body.image2;
        const image3path=req.files?.image3
-       ?`/uploaded_images/${req.files.image[0].filename}`
+       ?`/uploaded_images/${req.files.image3[0].filename}`
        :req.body.image3;
 
           let parsedsize=req.body.size;
@@ -231,8 +231,7 @@ const addproducts = async (req, res) => {
          ? Number(cleanedStock) 
          : null;
      
-     
-     
+      console.log("avaialble stock",availablestock);   
      
     const productData = {
       mainCategory: req.body.mainCategory,
