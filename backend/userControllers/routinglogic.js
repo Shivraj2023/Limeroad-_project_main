@@ -73,7 +73,7 @@ const login = async (req, res) => {
       usertype: user.usertype,
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" });
     
     res.status(200).json({ 
       message: "Login successful", 
@@ -387,6 +387,7 @@ const addproducts = async (req, res) => {
     try{
       const{cartItems}=req.body;
       const customerId=req.user&& req.user.id;
+      console.log(customerId);
     
 
       if (!cartItems || cartItems.length === 0) {

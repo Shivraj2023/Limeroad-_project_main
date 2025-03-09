@@ -53,7 +53,7 @@ const Logout = () => {
               });
             console.log("logout failed",error);
         }
-     }
+     };
 
 
   return (
